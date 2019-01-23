@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onImageLongClick(ImageView imageView, int position) {
                         Toast.makeText(MainActivity.this, "长按了哟position=" + position, 1).show();
-
                     }
                 })
                 //设置图片加载器（必须设置）
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                         return false;
                                     }
-
                                     @Override
                                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                         waitDialog.dismiss();
@@ -116,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(new CommonAdapter<BaseImageBean>(this, R.layout.item_news, goodsImages) {
             @Override
             public void convert(ViewHolder holder, int position, BaseImageBean entity) {
-                ((NineGridView) holder.getView(R.id.nineGrid)).bindConfigure(configure)
+                ((NineGridView) holder.getView(R.id.nineGrid))
+                        .bindConfigure(configure)
                         .setNineAdapter(new NineGridViewAdapter(MainActivity.this, goodsImages));
             }
         });
