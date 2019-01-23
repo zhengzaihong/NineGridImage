@@ -16,34 +16,34 @@ android 宫格视图库,支持大图预览，自定义指示器，支持所有�
 2、通过代码方式自定义样式配置：
 
         final NineGridViewConfigure configure = NineGridViewConfigure.getNineGridViewConfigure()
-		  //设置单张图片固定宽高
+		 //设置单张图片固定宽高
                 .setSingleImageSize(250)
-				//设置单张图片固定宽高
+		//设置单张图片固定宽高
                 .setSingleFixed(false)
-				//设置宫格视图图片圆角度数
+		//设置宫格视图图片圆角度数
                 .setRectAdius(10)
-				//设置宫格视图列数
+		//设置宫格视图列数
                 .setColumnNum(3)
-				//设置最大显示多少张
+		//设置最大显示多少张
                 .setMaxImageSize(9)
-				//设置宫格视图的间距
+		//设置宫格视图的间距
                 .setGridSpacing(10)
-				 //设置图片布局模式
+		//设置图片布局模式
                 .setMode(NineGridView.MODE_FILL)
-				//设置单张图片的缩放比例
+		//设置单张图片的缩放比例
                 .setSingleImageRatio(1.0f)
-				//设置超过最大张数显示的文本颜色
+		//设置超过最大张数显示的文本颜色
                 .setMoreTextColor(this.getResources().getColor(R.color.amber_200))
-				//设置超过最大张数显示的字体大小
+		//设置超过最大张数显示的字体大小
                 .setMoreTextSize(40)
-				 //设置预览时的背景
+		//设置预览时的背景
                 .setPreBgColor(this.getResources().getColor(R.color.amber_200))
-				//设置指示器间距
+		//设置指示器间距
                 .setIndicatorMargin(10) 
-				//设置setIndicator 优先级更高
+		//设置setIndicator 优先级更高
                 .setPreTipColor(this.getResources().getColor(R.color.red)) 
                 //设置自定义指示器
-              //  .setIndicator(new int[]{R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator__un_select_dot})
+              //.setIndicator(new int[]{R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator__un_select_dot})
                 //  设置大图预览的长按监听事件
                 .setOnPreLongClickListener(new PreImageOnLongClickListener() {
                     @SuppressLint("WrongConstant")
