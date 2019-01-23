@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NineGridView">
+        <attr name="nineSingleImageSize" format="dimension"/>
+        <attr name="nineSingleImageRatio" format="float"/>
+        <attr name="nineGridSpacing" format="dimension"/>
+        <attr name="nineMaxSize" format="integer"/>
+        <attr name="nineMode" format="enum">
+            <enum name="fill" value="0"/>
+            <enum name="grid" value="1"/>
+        </attr>
+
+        <attr name="nineImageRectAdius" format="dimension"/>
+        <attr name="nineColumnNum" format="integer"/>
+        <attr name="nineSingleFixed" format="boolean"/>
+        <attr name="nineMoreTextColor" format="color|reference"/>
+        <attr name="nineMoreTextSize" format="dimension"/>
+
+        <attr name="preIndicatorMargin" format="dimension"/>
+        <attr name="preTipTextColor" format="color|reference"/>
+        <attr name="preTipTextSize" format="dimension"/>
+        <attr name="preBgColor" format="color|reference"/>
+
+    </declare-styleable>
+</resources>
