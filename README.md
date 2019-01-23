@@ -1,9 +1,17 @@
 # NineGridImage
-android 宫格视图库,支持大图预览，自定义指示器，支持所有图片加载库,泛型操作等
+
+依赖地址：
+
+compile 'com.zzh:ninegridview:0.1.0'
+
+效果简版图：
 
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/Screenshot_2019-01-23-15-10-51-40.png)
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/Screenshot_2019-01-23-15-10-57-61.png)
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/Screenshot_2019-01-23-15-41-13-59.png)
+
+
+使用说明：
 
 
 1、布局文件中：
@@ -40,7 +48,7 @@ android 宫格视图库,支持大图预览，自定义指示器，支持所有�
                 .setPreBgColor(this.getResources().getColor(R.color.amber_200))
 		//设置指示器间距
                 .setIndicatorMargin(10) 
-		//设置setIndicator 优先级更高
+		//设置指示器文本颜色   注意：setIndicator 优先级更高
                 .setPreTipColor(this.getResources().getColor(R.color.red)) 
                 //设置自定义指示器
               //.setIndicator(new int[]{R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator__un_select_dot})
