@@ -112,8 +112,7 @@ compile 'com.zzh:ninegridview:0.1.1'
 特别说明：
 
  1.关键步骤：必须设置setImageLoader
- 
- 2.在开发中都是请求的接口拿到带有图片地址的对象，所以传入的图片对象需要继承BaseImageBean
+
  
 
 
