@@ -1,7 +1,6 @@
 package com.dz.ninegridimages.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.adapter.NineGridViewAdapter;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
 import com.dz.ninegridimages.interfaces.ImageLoader;
@@ -28,19 +26,20 @@ import java.util.List;
  **/
 
 @SuppressWarnings("all")
-public class NineGridView<T> extends RelativeLayout {
+public class NineGridView extends RelativeLayout {
 
     private NineGridViewAdapter nineGridViewAdapter;
 
     private List<ImageView> imageViews;
-    private List<T> mImageInfo;
+    private List<Object> mImageInfo;
+    //全局的图片加载器(必须设置,否者不显示图片)
     private static ImageLoader mImageLoader;
 
     public static final int MODE_FILL = 0;          //填充模式，类似于微信
     public static final int MODE_GRID = 1;          //网格模式，类似于QQ，4张图会 2X2布局
 
     private int columnNum = 3;
-    //全局的图片加载器(必须设置,否者不显示图片)
+
     private int singleImageSize = 250;              // 单张图片时的最大大小,单位px
     private boolean singleFixed = false;             //单张照片时是否固定宽高
     private float singleImageRatio = 1.0f;          // 单张图片的宽高比(宽/高)
@@ -59,6 +58,11 @@ public class NineGridView<T> extends RelativeLayout {
     private int rowCount;       // 行数
     private int gridWidth;      // 宫格宽度
     private int gridHeight;     // 宫格高度
+
+    //开启预览
+    public boolean enablePre = true;
+
+
     private Context mContext;
 
     public NineGridView(Context context) {
@@ -139,7 +143,7 @@ public class NineGridView<T> extends RelativeLayout {
     public NineGridView setNineAdapter(@NonNull NineGridViewAdapter adapter) {
         this.nineGridViewAdapter = adapter;
 
-        List<T> imageInfo = adapter.getImage();
+        List<Object> imageInfo = adapter.getImage();
         if (imageInfo == null || imageInfo.isEmpty()) {
             setVisibility(GONE);
             return this;
@@ -264,7 +268,7 @@ public class NineGridView<T> extends RelativeLayout {
     }
 
 
-    public NineGridView<T> bindConfigure(NineGridViewConfigure configure) {
+    public NineGridView bindConfigure(NineGridViewConfigure configure) {
         if (null != configure) {
             this.mImageLoader = configure.getImageLoader();
             //属性配置
@@ -277,6 +281,7 @@ public class NineGridView<T> extends RelativeLayout {
             this.textColor = configure.getMoreTextColor();
             this.textSize = configure.getMoreTextSize();
             this.mode = configure.getMode();
+            this.enablePre = configure.isEnablePre();
         }
         return this;
     }

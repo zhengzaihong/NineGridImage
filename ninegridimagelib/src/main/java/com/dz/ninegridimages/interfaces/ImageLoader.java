@@ -4,14 +4,14 @@ import android.content.Context;
 import android.widget.ImageView;
 
 /**
- *creat_user: zhengzaihong
- *email:1096877329@qq.com
- *creat_date: 2019/1/22 0022
- *creat_time: 17:04
- *describe: 图片加载接口
+ * creat_user: zhengzaihong
+ * email:1096877329@qq.com
+ * creat_date: 2019/1/22 0022
+ * creat_time: 17:04
+ * describe: 图片加载接口
  **/
 
-public interface ImageLoader <T> {
+public interface ImageLoader {
     /**
      * 需要子类实现该方法，以确定如何加载和显示图片
      *
@@ -19,9 +19,9 @@ public interface ImageLoader <T> {
      * @param imageView 需要展示图片的ImageView
      * @param object    实体类
      */
-    void onDisplayImage(Context context, ImageView imageView, T object);
+    <T> void onDisplayImage(Context context, ImageView imageView, T object);
 
 
-    void loadPreImage(Context context, ImageView imageView, T object);
+    <T> void loadPreImage(Context context, ImageView imageView, T object);
 
 }

@@ -10,20 +10,23 @@ import android.widget.ImageView;
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.preview.ImagePreviewActivity;
+import com.dz.ninegridimages.util.CopyUtil;
 import com.dz.ninegridimages.view.NineGridView;
 import com.dz.ninegridimages.view.NineGridViewWrapper;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- *creat_user: zhengzaihong
- *email:1096877329@qq.com
- *creat_date: 2019/1/22 0022
- *creat_time: 16:34
- *describe: 宫格视图适配器
+ * creat_user: zhengzaihong
+ * email:1096877329@qq.com
+ * creat_date: 2019/1/22 0022
+ * creat_time: 16:34
+ * describe: 宫格视图适配器
  **/
-public class NineGridViewAdapter<T extends BaseImageBean> {
+public class NineGridViewAdapter<T> {
 
     private List<T> listImage;
     private int statusHeight;
@@ -40,34 +43,40 @@ public class NineGridViewAdapter<T extends BaseImageBean> {
 
     /**
      * 如果要实现图片点击的逻辑，重写此方法即可
-     *
      * @param context      上下文
      * @param nineGridView 九宫格控件
      * @param index        当前点击图片的的索引
      * @param imageInfo    图片地址的数据集合
      */
     public void onImageItemClick(Context context, NineGridView nineGridView, int index, List<T> imageInfo) {
-
+        if (!nineGridView.enablePre) {
+            return;
+        }
+        BaseImageBean imageBean = new BaseImageBean();
         for (int i = 0; i < imageInfo.size(); i++) {
-            T info = imageInfo.get(i);
-            View imageView;
-            if (i < nineGridView.getMaxSize()) {
-                imageView = nineGridView.getChildAt(i);
-            } else {
-                //如果图片的数量大于显示的数量，则超过部分的返回动画统一退回到最后一个图片的位置
-                imageView = nineGridView.getChildAt(nineGridView.getMaxSize() - 1);
+            try {
+                View imageView;
+                if (i < nineGridView.getMaxSize()) {
+                    imageView = nineGridView.getChildAt(i);
+                } else {
+                    //如果图片的数量大于显示的数量，则超过部分的返回动画统一退回到最后一个图片的位置
+                    imageView = nineGridView.getChildAt(nineGridView.getMaxSize() - 1);
+                }
+                imageBean.imageViewWidth = imageView.getWidth();
+                imageBean.imageViewHeight = imageView.getHeight();
+                int[] points = new int[2];
+                imageView.getLocationInWindow(points);
+                imageBean.imageViewX = points[0];
+                imageBean.imageViewY = points[1] - statusHeight;
+                imageBean.setDatas(imageInfo);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            info.imageViewWidth = imageView.getWidth();
-            info.imageViewHeight = imageView.getHeight();
-            int[] points = new int[2];
-            imageView.getLocationInWindow(points);
-            info.imageViewX = points[0];
-            info.imageViewY = points[1] - statusHeight;
         }
 
         Intent intent = new Intent(context, ImagePreviewActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ImagePreviewActivity.IMAGE_INFO, (Serializable) imageInfo);
+        bundle.putSerializable(ImagePreviewActivity.IMAGE_INFO, imageBean);
         bundle.putInt(ImagePreviewActivity.CURRENT_ITEM, index);
         intent.putExtras(bundle);
         context.startActivity(intent);

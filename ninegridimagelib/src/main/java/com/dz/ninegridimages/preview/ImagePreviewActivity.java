@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -19,12 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
-
-import java.util.List;
 
 /**
  * creat_user: zhengzaihong
@@ -34,7 +30,7 @@ import java.util.List;
  * describe: 预览视图界面
  **/
 
-public class ImagePreviewActivity<T extends BaseImageBean> extends Activity implements ViewTreeObserver.OnPreDrawListener {
+public class ImagePreviewActivity extends Activity implements ViewTreeObserver.OnPreDrawListener {
 
     public static final String IMAGE_INFO = "IMAGE_INFO";
     public static final String CURRENT_ITEM = "CURRENT_ITEM";
@@ -42,7 +38,7 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
 
     private RelativeLayout rootView;
     private ImagePreviewAdapter imagePreviewAdapter;
-    private List<T> imageInfo;
+    private BaseImageBean imageInfo;
     private int currentItem;
     private int imageHeight;
     private int imageWidth;
@@ -70,10 +66,10 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
         screenHeight = metric.heightPixels;
 
         Intent intent = getIntent();
-        imageInfo = (List<T>) intent.getSerializableExtra(IMAGE_INFO);
+        imageInfo = ((BaseImageBean) intent.getSerializableExtra(IMAGE_INFO));
         currentItem = intent.getIntExtra(CURRENT_ITEM, 0);
 
-        imagePreviewAdapter = new ImagePreviewAdapter(this, imageInfo);
+        imagePreviewAdapter = new ImagePreviewAdapter(this, imageInfo.getDatas());
         configure = NineGridViewConfigure.getNineGridViewConfigure();
         final int[] indicator = configure.getIndicator();
         viewPager.setAdapter(imagePreviewAdapter);
@@ -96,7 +92,7 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
                         }
                     }
                 } else {
-                    tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.size()));
+                    tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
                 }
             }
 
@@ -109,8 +105,8 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
         if (null != indicator) {
             llIndicator.setVisibility(View.VISIBLE);
             tv_pager.setVisibility(View.GONE);
-            preImageViews = new ImageView[imageInfo.size()];
-            for (int i = 0; i < imageInfo.size(); i++) {
+            preImageViews = new ImageView[imageInfo.getDatas().size()];
+            for (int i = 0; i < imageInfo.getDatas().size(); i++) {
                 ImageView imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(15, 15));
                 preImageViews[i] = imageView;
@@ -128,7 +124,7 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
         } else {
             tv_pager.setTextSize(configure.getPreTipTextSize());
             tv_pager.setTextColor( configure.getPreTipColor());
-            tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.size()));
+            tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
         }
 
     }
@@ -149,7 +145,8 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
 
         computeImageWidthAndHeight(imageView);
 
-        final T imageData = imageInfo.get(currentItem);
+//        final BaseImageBean imageData = imageInfo.get(currentItem);
+        final BaseImageBean imageData = imageInfo;
         final float vx = imageData.imageViewWidth * 1.0f / imageWidth;
         final float vy = imageData.imageViewHeight * 1.0f / imageHeight;
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
@@ -182,7 +179,7 @@ public class ImagePreviewActivity<T extends BaseImageBean> extends Activity impl
         final ImageView imageView = imagePreviewAdapter.getPrimaryImageView();
         computeImageWidthAndHeight(imageView);
 
-        final T imageData = imageInfo.get(currentItem);
+        final BaseImageBean imageData = imageInfo;
         final float vx = imageData.imageViewWidth * 1.0f / imageWidth;
         final float vy = imageData.imageViewHeight * 1.0f / imageHeight;
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);

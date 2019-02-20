@@ -56,6 +56,8 @@ public class NineGridViewConfigure {
     private int moreTextColor = 0xFFFFFFFF;
     //设置指示器字体大小
     private int preTipTextSize = 22;
+    //开启预览
+    private boolean enablePre = true;
 
 
     public static NineGridViewConfigure getNineGridViewConfigure() {
@@ -206,6 +208,15 @@ public class NineGridViewConfigure {
 
     public NineGridViewConfigure setPreBgColor(int preBgColor) {
         this.preBgColor = preBgColor;
+        return this;
+    }
+
+    public boolean isEnablePre() {
+        return enablePre;
+    }
+
+    public NineGridViewConfigure setEnablePre(boolean enablePre) {
+        this.enablePre = enablePre;
         return this;
     }
 
