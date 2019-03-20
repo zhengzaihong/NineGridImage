@@ -3,7 +3,7 @@
 
 依赖地址：
 
-compile 'com.zzh:ninegridview:0.1.1'
+compile 'com.zzh:ninegridview:0.1.2'
 
 效果简版图：
 
@@ -25,7 +25,7 @@ compile 'com.zzh:ninegridview:0.1.1'
 2、通过代码方式自定义样式配置：
 
 
-    final NineGridViewConfigure configure = NineGridViewConfigure.getNineGridViewConfigure()
+      NineGridViewConfigure configure = new NineGridViewConfigure()
 		        //设置单张图片固定宽高
                 .setSingleImageSize(250)
 		        //设置单张图片固定宽高
@@ -39,7 +39,7 @@ compile 'com.zzh:ninegridview:0.1.1'
 	        	//设置宫格视图的间距
                 .setGridSpacing(10)
 		        //设置图片布局模式
-                .setMode(NineGridView.MODE_FILL)
+                .setMode(NineGridViewConfigure.MODE_FILL)
 		        //设置单张图片的缩放比例
                 .setSingleImageRatio(1.0f)
 		        //设置超过最大张数显示的文本颜色
@@ -68,7 +68,7 @@ compile 'com.zzh:ninegridview:0.1.1'
                 .setImageLoader(new ImageLoader() {
                     //九宫格图加载
                     @Override
-                    public <T> void onDisplayImage(Context context, ImageView imageView, T object) {
+                    public <T> void displayImage(Context context, ImageView imageView, T object) {
                         Glide.with(context).load(object.toString())
                                 .fitCenter()
                                 .placeholder(R.mipmap.ic_launcher)
@@ -108,6 +108,23 @@ compile 'com.zzh:ninegridview:0.1.1'
 3、通过nineGrid.bindConfigure(configure)绑定即可
 
 4、使用setNineAdapter(new NineGridViewAdapter(MainActivity.this, "图片地址集合"));
+ 
+ 例：
+
+
+        listView.setAdapter(new CommonAdapter<GoodsImage>(this, R.layout.item_news, goodsImages) {
+            @Override
+            public void convert(ViewHolder holder, int position, GoodsImage entity) {
+                ((NineGridView) holder.getView(R.id.nineGrid))
+                        .bindConfigure(configure)
+                        .setNineAdapter(new NineGridViewAdapter(MainActivity.this, entity.datas));
+            }
+        });
+
+
+
+
+
 
 特别说明：
 
