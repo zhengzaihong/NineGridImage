@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        final NineGridViewConfigure configure = new NineGridViewConfigure()
+         final NineGridViewConfigure configure = new NineGridViewConfigure()
                 .setSingleImageSize(250)//设置单张图片固定宽高
                 .setSingleFixed(false)//设置单张图片固定宽高
                 .setRectAdius(10)//设置宫格视图图片圆角度数
