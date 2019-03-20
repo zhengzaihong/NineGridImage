@@ -10,7 +10,7 @@ import android.widget.ImageView;
  * describe: 大图预览长按监听事件
  **/
 
-public interface PreImageOnLongClickListener {
+public interface PreImageOnLongClickListener<T> {
 
-    void onImageLongClick(ImageView imageView,int position);
+    void onImageLongClick(ImageView imageView,int position,T obejct);
 }

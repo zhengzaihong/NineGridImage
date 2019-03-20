@@ -19,7 +19,7 @@ public interface ImageLoader {
      * @param imageView 需要展示图片的ImageView
      * @param object    实体类
      */
-    <T> void onDisplayImage(Context context, ImageView imageView, T object);
+    <T> void displayImage(Context context, ImageView imageView, T object);
 
 
     <T> void loadPreImage(Context context, ImageView imageView, T object);

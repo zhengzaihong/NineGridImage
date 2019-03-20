@@ -18,12 +18,12 @@ import com.dz.ninegridimages.view.NineGridView;
  * describe: 宫格视图参数配置
  **/
 
-
 public class NineGridViewConfigure {
 
-    private static NineGridViewConfigure nineGridViewConfigure;
-    private static PreImageOnLongClickListener longClickListener;
-
+    //填充模式，类似于微信
+    public static final int MODE_FILL = 0;
+    //网格模式，类似于QQ，4张图会 2X2布局
+    public static final int MODE_GRID = 1;
     //设置九宫格图片圆角度数
     private int rectAdius = 0;
     //设置指示器drawable id
@@ -49,8 +49,8 @@ public class NineGridViewConfigure {
     // 宫格间距，单位px
     private int gridSpacing = 3;
     // 默认使用fill模式
-    private int mode = NineGridView.MODE_FILL;
-    //显示文字的大小单位sp
+    private int mode = MODE_FILL;
+    //显示文字的大小单位px
     private float moreTextSize = 35;
     //显示文字的颜色
     private int moreTextColor = 0xFFFFFFFF;
@@ -59,22 +59,8 @@ public class NineGridViewConfigure {
     //开启预览
     private boolean enablePre = true;
 
-
-    public static NineGridViewConfigure getNineGridViewConfigure() {
-
-        if (null == nineGridViewConfigure) {
-            synchronized (NineGridViewConfigure.class) {
-                if (null == nineGridViewConfigure) {
-
-                    nineGridViewConfigure = new NineGridViewConfigure();
-                }
-            }
-        }
-        return nineGridViewConfigure;
-    }
-
-    private NineGridViewConfigure() {
-    }
+    //大图预览时的长安监听器
+    private PreImageOnLongClickListener longClickListener;
 
 
     public NineGridViewConfigure setOnPreLongClickListener(PreImageOnLongClickListener longClickListener) {

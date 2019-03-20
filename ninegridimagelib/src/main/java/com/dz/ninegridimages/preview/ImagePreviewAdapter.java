@@ -41,7 +41,7 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
         super();
         this.imageInfo = imageInfo;
         this.context = context;
-        this.configure = NineGridViewConfigure.getNineGridViewConfigure();
+        this.configure = NineGridView.getConfigure();
     }
 
 
@@ -75,19 +75,21 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
         View view = LayoutInflater.from(context).inflate(R.layout.item_photoview, container, false);
 
         final PhotoView imageView = (PhotoView) view.findViewById(R.id.pv);
+        imageView.setOnPhotoTapListener(this);
+        final T info = imageInfo.get(position);
+        showExcessPic(imageView);
+
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 if (null != configure.getOnPreLongClickListener()) {
-                    configure.getOnPreLongClickListener().onImageLongClick(imageView, position);
+                    configure.getOnPreLongClickListener().onImageLongClick(imageView, position, info);
                 }
                 return false;
             }
         });
-        imageView.setOnPhotoTapListener(this);
-        T info = imageInfo.get(position);
-        showExcessPic(imageView);
-        NineGridView.getImageLoader().loadPreImage(context, imageView, info);
+
+        configure.getImageLoader().loadPreImage(context, imageView, info);
         container.addView(view);
         return view;
     }

@@ -22,14 +22,14 @@ public class BaseImageBean<T> implements Serializable {
     public int imageViewY;
     public List<T> datas;
 
-
-
-    public BaseImageBean(){
+    public BaseImageBean() {
     }
-    public BaseImageBean(String imageUrl){
+
+    public BaseImageBean(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public BaseImageBean(int imageId){
+
+    public BaseImageBean(int imageId) {
         this.imageId = imageId;
     }
 

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
+import com.dz.ninegridimages.view.NineGridView;
 
 /**
  * creat_user: zhengzaihong
@@ -70,7 +71,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         currentItem = intent.getIntExtra(CURRENT_ITEM, 0);
 
         imagePreviewAdapter = new ImagePreviewAdapter(this, imageInfo.getDatas());
-        configure = NineGridViewConfigure.getNineGridViewConfigure();
+        configure = NineGridView.getConfigure();
         final int[] indicator = configure.getIndicator();
         viewPager.setAdapter(imagePreviewAdapter);
         viewPager.setCurrentItem(currentItem);

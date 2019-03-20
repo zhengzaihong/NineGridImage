@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
+import com.dz.ninegridimages.config.NineGridViewConfigure;
 import com.dz.ninegridimages.preview.ImagePreviewActivity;
 import com.dz.ninegridimages.util.CopyUtil;
 import com.dz.ninegridimages.view.NineGridView;
@@ -30,10 +31,12 @@ public class NineGridViewAdapter<T> {
 
     private List<T> listImage;
     private int statusHeight;
+    private NineGridViewConfigure configure;
 
     public NineGridViewAdapter(Context mContext, List<T> listImage) {
         this.listImage = listImage;
         this.statusHeight = getStatusHeight(mContext);
+        this.configure = NineGridView.getConfigure();
     }
 
 
@@ -43,24 +46,25 @@ public class NineGridViewAdapter<T> {
 
     /**
      * 如果要实现图片点击的逻辑，重写此方法即可
+     *
      * @param context      上下文
      * @param nineGridView 九宫格控件
      * @param index        当前点击图片的的索引
      * @param imageInfo    图片地址的数据集合
      */
     public void onImageItemClick(Context context, NineGridView nineGridView, int index, List<T> imageInfo) {
-        if (!nineGridView.enablePre) {
+        if (!configure.isEnablePre()) {
             return;
         }
         BaseImageBean imageBean = new BaseImageBean();
         for (int i = 0; i < imageInfo.size(); i++) {
             try {
                 View imageView;
-                if (i < nineGridView.getMaxSize()) {
+                if (i < configure.getMaxImageSize()) {
                     imageView = nineGridView.getChildAt(i);
                 } else {
                     //如果图片的数量大于显示的数量，则超过部分的返回动画统一退回到最后一个图片的位置
-                    imageView = nineGridView.getChildAt(nineGridView.getMaxSize() - 1);
+                    imageView = nineGridView.getChildAt(configure.getMaxImageSize() - 1);
                 }
                 imageBean.imageViewWidth = imageView.getWidth();
                 imageBean.imageViewHeight = imageView.getHeight();
