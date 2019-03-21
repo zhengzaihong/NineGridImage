@@ -8,6 +8,7 @@ compile 'com.zzh:ninegridview:0.1.2'
 效果简版图：
 
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/pre.gif)
+![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/pre2.gif)
 
 使用说明：
 
@@ -80,7 +81,7 @@ compile 'com.zzh:ninegridview:0.1.2'
                     //预览大图加载 可以在这里做加载动画等
                     @Override
                     public <T> void loadPreImage(Context context, ImageView imageView, T object) {
-                        //实现方式 glide自带监听 4.x 实现方式更加 或者其他自带监听进度的框架
+                        //实现方式 glide自带监听 4.x 实现方式更加 或者其他自带监听进度的框架,这里只是demo演示用
                         final WaitDialog waitDialog = new WaitDialog(context);
                         waitDialog.show();
                         Glide.with(context).load(object.toString())
