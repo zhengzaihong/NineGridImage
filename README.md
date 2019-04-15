@@ -3,7 +3,9 @@
 
 依赖地址：
 
-compile 'com.zzh:ninegridview:0.1.2'
+   
+   compile 'com.zzh:ninegridview:0.1.2'
+   
 
 效果简版图：
 
@@ -130,6 +132,8 @@ compile 'com.zzh:ninegridview:0.1.2'
 特别说明：
 
  1.关键步骤：必须设置setImageLoader
+ 
+ 2.所传入的实体类需要继承BaseImageBean
 
  
 
