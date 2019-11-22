@@ -62,6 +62,71 @@ public class NineGridViewConfigure {
     //大图预览时的长安监听器
     private PreImageOnLongClickListener longClickListener;
 
+    //选中时的背景颜色
+    private int selectIndicatorBgColor = Color.parseColor("#5A8BF4");
+
+    //未选中时的背景颜色
+    private int unSelectIndicatorBgColor = Color.parseColor("#5A8BF4");
+
+    //指示器背景圆角度数
+    private int indicatorBgRadius = 30;
+    // 指示器边框线宽
+    private int indicatorStrokeWidth = 0;
+    //指示器 边框颜色
+    private int indicatorStrokeColor = Color.TRANSPARENT;
+
+    //指示器背景的 内距
+    private int indicatorBgPadding = 0;
+
+    //指示器圆角类型
+    private RadiusType indicatorRadiusType = RadiusType.ALL_RADIUS;
+
+    //指示器的大小
+    private int indicatorSize = 30;
+    
+    //是否开启圆点小指示器
+    private boolean enableIndicatorDot = false;
+
+    //指示器的边界修饰类型
+    public enum RadiusType {
+        /**
+         * 左边_上_下圆角
+         */
+        LEFT_TOP_BOTTOM_RADIUS(),
+        /**
+         * 右边_上_下圆角
+         */
+        RIGHT_TOP_BOOTOM_RADIUS,
+        /**
+         * 左边_上圆角
+         */
+        LEFT_TOP_RADIUS,
+        /**
+         * 左边_下圆角
+         */
+        LEFT_BOTTOM_RADIUS,
+
+        /**
+         * 右边_上圆角
+         */
+        RIGHT_TOP_RADIUS,
+
+        /**
+         * 右边_下圆角
+         */
+        RIGHT_BOOTOM_RADIUS,
+
+        /**
+         * 四边圆角
+         */
+        ALL_RADIUS,
+
+        /**
+         * 无圆角
+         */
+        NONE_RADIUS
+
+    }
 
     public NineGridViewConfigure setOnPreLongClickListener(PreImageOnLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
@@ -227,4 +292,88 @@ public class NineGridViewConfigure {
         return this;
     }
 
+    
+    
+    
+
+    public int getSelectIndicatorBgColor() {
+        return selectIndicatorBgColor;
+    }
+
+    public NineGridViewConfigure setSelectIndicatorBgColor(int selectIndicatorBgColor) {
+        this.selectIndicatorBgColor = selectIndicatorBgColor;
+        return this;
+    }
+
+    public int getUnSelectIndicatorBgColor() {
+        return unSelectIndicatorBgColor;
+    }
+
+    public NineGridViewConfigure setUnSelectIndicatorBgColor(int unSelectIndicatorBgColor) {
+        this.unSelectIndicatorBgColor = unSelectIndicatorBgColor;
+        return this;
+    }
+
+    public int getIndicatorBgRadius() {
+        return indicatorBgRadius;
+    }
+
+    public NineGridViewConfigure setIndicatorBgRadius(int indicatorBgRadius) {
+        this.indicatorBgRadius = indicatorBgRadius;
+        return this;
+    }
+
+    public int getIndicatorStrokeWidth() {
+        return indicatorStrokeWidth;
+    }
+
+    public NineGridViewConfigure setIndicatorStrokeWidth(int indicatorStrokeWidth) {
+        this.indicatorStrokeWidth = indicatorStrokeWidth;
+        return this;
+    }
+
+    public int getIndicatorStrokeColor() {
+        return indicatorStrokeColor;
+    }
+
+    public NineGridViewConfigure setIndicatorStrokeColor(int indicatorStrokeColor) {
+        this.indicatorStrokeColor = indicatorStrokeColor;
+        return this;
+    }
+
+    public int getIndicatorBgPadding() {
+        return indicatorBgPadding;
+    }
+
+    public NineGridViewConfigure setIndicatorBgPadding(int indicatorBgPadding) {
+        this.indicatorBgPadding = indicatorBgPadding;
+        return this;
+    }
+
+    public RadiusType getIndicatorRadiusType() {
+        return indicatorRadiusType;
+    }
+
+    public NineGridViewConfigure setIndicatorRadiusType(RadiusType indicatorRadiusType) {
+        this.indicatorRadiusType = indicatorRadiusType;
+        return this;
+    }
+
+    public int getIndicatorSize() {
+        return indicatorSize;
+    }
+
+    public NineGridViewConfigure setIndicatorSize(int indicatorSize) {
+        this.indicatorSize = indicatorSize;
+        return this;
+    }
+
+    public boolean isEnableIndicatorDot() {
+        return enableIndicatorDot;
+    }
+
+    public NineGridViewConfigure setEnableIndicatorDot(boolean enableIndicatorDot) {
+        this.enableIndicatorDot = enableIndicatorDot;
+        return this;
+    }
 }

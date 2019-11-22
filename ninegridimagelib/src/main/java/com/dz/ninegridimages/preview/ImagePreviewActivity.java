@@ -2,6 +2,7 @@ package com.dz.ninegridimages.preview;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
+import com.dz.ninegridimages.view.IndicatorView;
 import com.dz.ninegridimages.view.NineGridView;
 
 /**
@@ -51,6 +53,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
 
     private NineGridViewConfigure configure;
 
+    @SuppressLint("StringFormatMatches")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +75,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
 
         imagePreviewAdapter = new ImagePreviewAdapter(this, imageInfo.getDatas());
         configure = NineGridView.getConfigure();
+
         final int[] indicator = configure.getIndicator();
         viewPager.setAdapter(imagePreviewAdapter);
         viewPager.setCurrentItem(currentItem);
@@ -81,15 +85,21 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
+
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
-                if (null != indicator) {
-                    for (int i = 0; i < preImageViews.length; i++) {
-                        if (i == position) {
-                            preImageViews[i].setBackgroundResource(indicator[0]);
-                        } else {
-                            preImageViews[i].setBackgroundResource(indicator[1]);
+
+                if(configure.isEnableIndicatorDot()){
+                    if (null != indicator) {
+                        for (int i = 0; i < preImageViews.length; i++) {
+                            preImageViews[i].setBackgroundResource(i==position?indicator[0]:indicator[1]);
+                        }
+                    }else {
+                        //刷新View
+                        for (int i = 0; i < preImageViews.length; i++) {
+                            IndicatorView indicatorView = (IndicatorView) preImageViews[i];
+                            indicatorView.changView(i == position);
                         }
                     }
                 } else {
@@ -103,31 +113,51 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
             }
         });
 
-        if (null != indicator) {
+        //是否开启 小圆点指示器
+        if (configure.isEnableIndicatorDot()) {
+
             llIndicator.setVisibility(View.VISIBLE);
             tv_pager.setVisibility(View.GONE);
             preImageViews = new ImageView[imageInfo.getDatas().size()];
-            for (int i = 0; i < imageInfo.getDatas().size(); i++) {
-                ImageView imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(15, 15));
-                preImageViews[i] = imageView;
-                if (i == currentItem) {
-                    preImageViews[i].setBackgroundResource(indicator[0]);
-                } else {
-                    preImageViews[i].setBackgroundResource(indicator[1]);
+
+            //如果是 xml 方式配置的指示器(优先权最高)
+            if (null != indicator) {
+                for (int i = 0; i < imageInfo.getDatas().size(); i++) {
+                    ImageView imageView = new ImageView(mContext);
+                    imageView.setLayoutParams(new ViewGroup.LayoutParams(15, 15));
+                    preImageViews[i] = imageView;
+                    preImageViews[i].setBackgroundResource(i==currentItem?indicator[0]:indicator[1]);
+
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    layoutParams.leftMargin = configure.getIndicatorMargin();
+                    llIndicator.addView(imageView, layoutParams);
                 }
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                layoutParams.leftMargin =configure.getIndicatorMargin();
-                llIndicator.addView(imageView, layoutParams);
+            }else {
+
+                //代码方式
+                for (int i = 0; i < imageInfo.getDatas().size(); i++) {
+                    IndicatorView imageView = new IndicatorView(mContext);
+                    int boxSize = configure.getIndicatorSize();
+                    imageView.setLayoutParams(new ViewGroup.LayoutParams(boxSize, boxSize));
+
+                    //默认第一个是选中
+                    imageView.setConfig(configure,currentItem==i);
+                    preImageViews[i] = imageView;
+
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    layoutParams.leftMargin = configure.getIndicatorMargin();
+                    llIndicator.addView(imageView, layoutParams);
+                }
+
             }
 
         } else {
             tv_pager.setTextSize(configure.getPreTipTextSize());
-            tv_pager.setTextColor( configure.getPreTipColor());
+            tv_pager.setTextColor(configure.getPreTipColor());
             tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
         }
-
     }
 
     @Override

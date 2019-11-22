@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/btGoSingle"
+        android:layout_gravity="right"
+        android:text="单张图显示大图用法"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></Button>
 
     <ListView
         android:id="@+id/listView"

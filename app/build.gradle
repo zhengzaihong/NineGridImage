@@ -3,7 +3,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.dz.ninegridimage"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -14,6 +14,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    //处理所有报META-INF/*'的错误
+    packagingOptions {
+        pickFirst 'META-INF/atomicfu.kotlin_module'
+
     }
 }
 
@@ -37,7 +43,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation project(':ninegridimagelib')
-    compile "com.zzh:viewtools:0.1.7"
+    //作者其他开源库
+    implementation "com.zzh:viewtools:0.1.91"
+    implementation "com.zzh:rjtools:1.0.81"
 }

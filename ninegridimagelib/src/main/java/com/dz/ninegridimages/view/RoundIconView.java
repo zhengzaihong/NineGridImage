@@ -74,7 +74,7 @@ public class RoundIconView extends android.support.v7.widget.AppCompatImageView 
 
 
     /**
-     * 判断是否是快速点击
+     * 判断是否是快速双击
      */
     private static long lastClickTime;
 

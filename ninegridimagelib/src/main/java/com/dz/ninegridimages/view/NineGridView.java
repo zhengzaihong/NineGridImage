@@ -77,7 +77,6 @@ public class NineGridView extends RelativeLayout {
     private void initConfig(AttributeSet attrs) {
         configure = new NineGridViewConfigure();
         imageViews = new ArrayList<>();
-
     }
 
 
@@ -232,6 +231,7 @@ public class NineGridView extends RelativeLayout {
     }
 
 
+    //可单独配置该文件
     public NineGridView bindConfigure(NineGridViewConfigure configure) {
         if (null != configure) {
             this.mImageLoader = configure.getImageLoader();

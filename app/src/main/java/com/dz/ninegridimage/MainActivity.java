@@ -3,9 +3,10 @@ package com.dz.ninegridimage;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -14,17 +15,19 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dz.ninegridimage.bean.GoodsImage;
 import com.dz.ninegridimages.adapter.NineGridViewAdapter;
-import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
 import com.dz.ninegridimages.interfaces.ImageLoader;
 import com.dz.ninegridimages.interfaces.PreImageOnLongClickListener;
 import com.dz.ninegridimages.view.NineGridView;
+import com.dz.utlis.ClassTools;
+import com.dz.utlis.ToastTool;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import dz.solc.viewtool.adapter.CommonAdapter;
+import dz.solc.viewtool.dialog.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,14 +38,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = findViewById(R.id.listView);
+        Button btGoSingle = findViewById(R.id.btGoSingle);
+
+        btGoSingle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClassTools.toAct(MainActivity.this,PreBigAcitivity.class);
+            }
+        });
+
 
         final List<GoodsImage> goodsImages = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             goodsImages.add(loadData());
         }
 
+        final LoadingDialog waitDialog = new LoadingDialog(this)
+                .setLoadingTips("加载中...")
+                .setShowMaxTime(10)
+                .setOutTouchside(true);
 
-         final NineGridViewConfigure configure = new NineGridViewConfigure()
+
+        final NineGridViewConfigure configure = new NineGridViewConfigure()
                 .setSingleImageSize(250)//设置单张图片固定宽高
                 .setSingleFixed(false)//设置单张图片固定宽高
                 .setRectAdius(10)//设置宫格视图图片圆角度数
@@ -55,17 +72,27 @@ public class MainActivity extends AppCompatActivity {
                 .setMoreTextColor(this.getResources().getColor(R.color.amber_200))//设置超过最大张数显示的文本颜色
                 .setMoreTextSize(40)//设置超过最大张数显示的字体大小
                 .setPreBgColor(this.getResources().getColor(R.color.amber_200)) //设置预览时的背景
+                .setPreTipColor(this.getResources().getColor(R.color.red)) //设置指示器文本颜色
+
+//               指示器新加功能支持 xml 和 代码配置两种方式
+
+                .setEnableIndicatorDot(true) //设置开启 Indicator
                 .setIndicatorMargin(10) //设置指示器间距
-                .setPreTipColor(this.getResources().getColor(R.color.red)) //设置指示器文本颜色    设置setIndicator 优先级更高
-                //设置自定义指示器
-//                  .setIndicator(new int[]{R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator__un_select_dot})
+                //设置自定义指示器 xml 设置会覆盖 代码设置的方式
+                //.setIndicator(new int[]{R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator_un_select_dot}) //优先级最高，其次是代码配置
+                .setIndicatorBgPadding(5) //设置Indicator小圆点 背景内距
+                .setIndicatorRadiusType(NineGridViewConfigure.RadiusType.ALL_RADIUS) //边距全圆角
+                .setIndicatorSize(5) //设置 小圆点指示器大小
+                .setIndicatorStrokeColor(this.getResources().getColor(R.color.amber_200)) // 设置Indicator小圆点 边框颜色
+                .setIndicatorStrokeWidth(0)//设置Indicator小圆点边框宽度
+                .setSelectIndicatorBgColor(this.getResources().getColor(R.color.light_blue_200)) // 设置Indicator小圆点选中时的颜色
+                .setUnSelectIndicatorBgColor(this.getResources().getColor(R.color.gray_cc))//设置Indicator小圆点 未选中时的颜色
                 //  设置大图预览的长按监听事件
                 .setOnPreLongClickListener(new PreImageOnLongClickListener() {
                     @Override
                     public void onImageLongClick(ImageView imageView, int position, Object obejct) {
-                        Toast.makeText(MainActivity.this, "长按了position=" + position, Toast.LENGTH_SHORT).show();
+                        ToastTool.get().show("长按了position=" + position);
                     }
-
                 })
                 //设置图片加载器（必须设置） 上面的都是非必须
                 .setImageLoader(new ImageLoader() {
@@ -76,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                                 .fitCenter()
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
+                                .override(100,100)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageView);
                     }
@@ -84,12 +112,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public <T> void loadPreImage(Context context, ImageView imageView, T object) {
                         //实现方式 glide自带监听 4.x 实现方式更加 或者其他自带监听进度的框架
-                        final WaitDialog waitDialog = new WaitDialog(context);
-                        waitDialog.show();
+
+                        waitDialog.showDialog();
+
                         Glide.with(context).load(object.toString())
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .listener(new RequestListener<String, GlideDrawable>() {
                                     @Override
                                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -117,24 +146,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
+
     public GoodsImage loadData() {
-
         GoodsImage imageBean = new GoodsImage();
-
         imageBean.setDatas(randomUrl());
-
         return imageBean;
     }
 
     public List<String> randomUrl() {
 
         List<String> stringList = new ArrayList<>();
-
         int count = new Random().nextInt(urls.size());
-
 
         for (int i = 0; i < count; i++) {
             stringList.add(urls.get(new Random().nextInt(urls.size())));
@@ -146,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
     static List<String> urls = new ArrayList<>();
 
     static {
-
 
         urls.add("http://img3.imgtn.bdimg.com/it/u=2606296522,109065689&fm=26&gp=0.jpg");
         urls.add("https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=98b063ef9f45d688bc02b4a494c37dab/4b90f603738da977625f2cf7bd51f8198718e3fe.jpg");

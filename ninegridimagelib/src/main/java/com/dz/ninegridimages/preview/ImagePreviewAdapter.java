@@ -29,7 +29,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * describe: 大图的适配器
  **/
 
-
 public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAttacher.OnPhotoTapListener {
 
     private List<T> imageInfo;
