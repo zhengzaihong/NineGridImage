@@ -5,9 +5,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.dz.ninegridimages.config.NineGridViewConfigure;
 
@@ -28,7 +27,7 @@ import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.RIGH
  * creat_time: 16:42
  * describe 圆点指示器
  **/
-public class IndicatorView extends android.support.v7.widget.AppCompatImageView {
+public class IndicatorView extends AppCompatImageView {
 
     //记录当前View是选中还是未选中的 indicator
 

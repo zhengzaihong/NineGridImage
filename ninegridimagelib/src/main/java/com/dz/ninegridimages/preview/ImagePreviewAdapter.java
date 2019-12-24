@@ -36,11 +36,11 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
     private View currentView;
     private NineGridViewConfigure configure;
 
-    public ImagePreviewAdapter(Context context, @NonNull List<T> imageInfo) {
+    public ImagePreviewAdapter(Context context, NineGridViewConfigure configure,@NonNull List<T> imageInfo) {
         super();
         this.imageInfo = imageInfo;
         this.context = context;
-        this.configure = NineGridView.getConfigure();
+        this.configure = configure;
     }
 
 

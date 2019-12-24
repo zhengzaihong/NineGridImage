@@ -1,5 +1,6 @@
 package com.dz.ninegridimage;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +11,7 @@ import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.dz.ninegridimage.bean.GoodsImage;
-import com.dz.ninegridimages.adapter.NineGridViewAdapter;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
 import com.dz.ninegridimages.interfaces.ImageLoader;
 import com.dz.ninegridimages.interfaces.PreImageOnLongClickListener;
@@ -27,15 +24,19 @@ import java.util.List;
 import java.util.Random;
 
 import dz.solc.viewtool.adapter.CommonAdapter;
-import dz.solc.viewtool.dialog.LoadingDialog;
 
 public class MainActivity extends AppCompatActivity {
 
 
+    private Context mContext;
+
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.mContext = this;
 
         ListView listView = findViewById(R.id.listView);
         Button btGoSingle = findViewById(R.id.btGoSingle);
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btGoSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClassTools.toAct(MainActivity.this,PreBigAcitivity.class);
+                ClassTools.toAct(MainActivity.this, PreBigAcitivity.class);
             }
         });
 
@@ -53,17 +54,12 @@ public class MainActivity extends AppCompatActivity {
             goodsImages.add(loadData());
         }
 
-        final LoadingDialog waitDialog = new LoadingDialog(this)
-                .setLoadingTips("加载中...")
-                .setShowMaxTime(10)
-                .setOutTouchside(true);
-
 
         final NineGridViewConfigure configure = new NineGridViewConfigure()
                 .setSingleImageSize(250)//设置单张图片固定宽高
                 .setSingleFixed(false)//设置单张图片固定宽高
                 .setRectAdius(10)//设置宫格视图图片圆角度数
-                .setColumnNum(3)//设置宫格视图列数
+                .setColumnNum(2)//设置宫格视图列数
                 .setMaxImageSize(9)//设置最大显示多少张
                 .setGridSpacing(10)//设置宫格视图的间距
                 .setMode(NineGridViewConfigure.MODE_FILL) //设置图片布局模式
@@ -75,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 .setPreTipColor(this.getResources().getColor(R.color.red)) //设置指示器文本颜色
 
 //               指示器新加功能支持 xml 和 代码配置两种方式
-
                 .setEnableIndicatorDot(true) //设置开启 Indicator
                 .setIndicatorMargin(10) //设置指示器间距
                 //设置自定义指示器 xml 设置会覆盖 代码设置的方式
@@ -99,11 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     //九宫格图加载
                     @Override
                     public <T> void displayImage(Context context, ImageView imageView, T object) {
+
+                        //真实开发中，如果你的列表显示 全是图片并多，且勿向这样加载，请异步处理，
+                        // 列表在滑动时 不要加载图片，等待停止滑动后做加载。
+
                         Glide.with(context).load(object.toString())
-                                .fitCenter()
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
-                                .override(100,100)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageView);
                     }
@@ -111,27 +108,12 @@ public class MainActivity extends AppCompatActivity {
                     //预览大图加载 可以在这里做加载动画等
                     @Override
                     public <T> void loadPreImage(Context context, ImageView imageView, T object) {
-                        //实现方式 glide自带监听 4.x 实现方式更加 或者其他自带监听进度的框架
-
-                        waitDialog.showDialog();
-
                         Glide.with(context).load(object.toString())
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .listener(new RequestListener<String, GlideDrawable>() {
-                                    @Override
-                                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                        waitDialog.dismiss();
-                                        return false;
-                                    }
-                                })
+                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                                 .into(imageView);
+
                     }
 
                 });
@@ -140,11 +122,22 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(new CommonAdapter<GoodsImage>(this, R.layout.item_news, goodsImages) {
             @Override
             public void convert(ViewHolder holder, int position, GoodsImage entity) {
-                ((NineGridView) holder.getView(R.id.nineGrid))
-                        .bindConfigure(configure)
-                        .setNineAdapter(new NineGridViewAdapter(MainActivity.this, entity.datas));
+
+                NineGridView nineGridView = holder.getView(R.id.nineGrid);
+                try {
+                    //配置并构建adapter
+                    NineGridView.NineGridViewBuilder builder = new NineGridView.NineGridViewBuilder(mContext)
+                            .setImageInfo(entity.datas)
+                            .setNineGridViewConfigure(configure);
+
+                    nineGridView.setNineAdapter(builder.buildAdpter());
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         });
+
 
     }
 
@@ -158,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
     public List<String> randomUrl() {
 
         List<String> stringList = new ArrayList<>();
-        int count = new Random().nextInt(urls.size());
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 3; i++) {
             stringList.add(urls.get(new Random().nextInt(urls.size())));
         }
         return stringList;

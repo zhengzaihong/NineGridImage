@@ -11,13 +11,10 @@ import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
 import com.dz.ninegridimages.preview.ImagePreviewActivity;
-import com.dz.ninegridimages.util.CopyUtil;
+import com.dz.ninegridimages.util.NineGridViewHelper;
 import com.dz.ninegridimages.view.NineGridView;
 import com.dz.ninegridimages.view.NineGridViewWrapper;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,21 +24,33 @@ import java.util.List;
  * creat_time: 16:34
  * describe: 宫格视图适配器
  **/
+@SuppressWarnings("all")
 public class NineGridViewAdapter<T> {
 
     private List<T> listImage;
     private int statusHeight;
     private NineGridViewConfigure configure;
 
-    public NineGridViewAdapter(Context mContext, List<T> listImage) {
+    /**
+     * 初始化 NineGridViewAdapter
+     *
+     * @param mContext  上下文，用于启动 act
+     * @param configure 视图配置文件
+     * @param listImage 图集
+     */
+    public NineGridViewAdapter(Context mContext, NineGridViewConfigure configure, List<T> listImage) {
         this.listImage = listImage;
         this.statusHeight = getStatusHeight(mContext);
-        this.configure = NineGridView.getConfigure();
+        this.configure = configure;
     }
 
 
     public List<T> getImage() {
         return listImage;
+    }
+
+    public NineGridViewConfigure getConfigure() {
+        return configure;
     }
 
     /**
@@ -78,7 +87,10 @@ public class NineGridViewAdapter<T> {
             }
         }
 
+        NineGridViewHelper.getInstance().setNineGridViewConfigure(configure);
         Intent intent = new Intent(context, ImagePreviewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ImagePreviewActivity.IMAGE_INFO, imageBean);
         bundle.putInt(ImagePreviewActivity.CURRENT_ITEM, index);

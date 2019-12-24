@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -17,7 +18,7 @@ import android.widget.ImageView;
  **/
 
 
-public class LoadingImgView extends android.support.v7.widget.AppCompatImageView {
+public class LoadingImgView extends AppCompatImageView {
 
     private float per;
 

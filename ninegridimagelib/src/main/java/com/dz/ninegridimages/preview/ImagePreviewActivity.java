@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.bean.BaseImageBean;
 import com.dz.ninegridimages.config.NineGridViewConfigure;
+import com.dz.ninegridimages.util.NineGridViewHelper;
 import com.dz.ninegridimages.view.IndicatorView;
-import com.dz.ninegridimages.view.NineGridView;
 
 /**
  * creat_user: zhengzaihong
@@ -33,6 +33,7 @@ import com.dz.ninegridimages.view.NineGridView;
  * describe: 预览视图界面
  **/
 
+@SuppressWarnings("all")
 public class ImagePreviewActivity extends Activity implements ViewTreeObserver.OnPreDrawListener {
 
     public static final String IMAGE_INFO = "IMAGE_INFO";
@@ -53,16 +54,22 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
 
     private NineGridViewConfigure configure;
 
+    private ViewPager viewPager;
+    private TextView tvPager;
+    private LinearLayout llIndicator;
+
+
     @SuppressLint("StringFormatMatches")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
+
         mContext = this;
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        final TextView tv_pager = (TextView) findViewById(R.id.tv_pager);
-        rootView = (RelativeLayout) findViewById(R.id.rootView);
-        LinearLayout llIndicator = (LinearLayout) findViewById(R.id.llIndicator);
+        viewPager = findViewById(R.id.viewPager);
+        tvPager = findViewById(R.id.tv_pager);
+        rootView = findViewById(R.id.rootView);
+        llIndicator = findViewById(R.id.llIndicator);
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -73,29 +80,28 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         imageInfo = ((BaseImageBean) intent.getSerializableExtra(IMAGE_INFO));
         currentItem = intent.getIntExtra(CURRENT_ITEM, 0);
 
-        imagePreviewAdapter = new ImagePreviewAdapter(this, imageInfo.getDatas());
-        configure = NineGridView.getConfigure();
-
+        configure = NineGridViewHelper.getInstance().getNineGridViewConfigure();
+        imagePreviewAdapter = new ImagePreviewAdapter(this, configure, imageInfo.getDatas());
         final int[] indicator = configure.getIndicator();
         viewPager.setAdapter(imagePreviewAdapter);
         viewPager.setCurrentItem(currentItem);
         viewPager.getViewTreeObserver().addOnPreDrawListener(this);
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
 
+            }
 
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
-
-                if(configure.isEnableIndicatorDot()){
+                if (configure.isEnableIndicatorDot()) {
                     if (null != indicator) {
                         for (int i = 0; i < preImageViews.length; i++) {
-                            preImageViews[i].setBackgroundResource(i==position?indicator[0]:indicator[1]);
+                            preImageViews[i].setBackgroundResource(i == position ? indicator[0] : indicator[1]);
                         }
-                    }else {
+                    } else {
                         //刷新View
                         for (int i = 0; i < preImageViews.length; i++) {
                             IndicatorView indicatorView = (IndicatorView) preImageViews[i];
@@ -103,13 +109,11 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                         }
                     }
                 } else {
-                    tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
+                    tvPager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -117,7 +121,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         if (configure.isEnableIndicatorDot()) {
 
             llIndicator.setVisibility(View.VISIBLE);
-            tv_pager.setVisibility(View.GONE);
+            tvPager.setVisibility(View.GONE);
             preImageViews = new ImageView[imageInfo.getDatas().size()];
 
             //如果是 xml 方式配置的指示器(优先权最高)
@@ -126,14 +130,14 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                     ImageView imageView = new ImageView(mContext);
                     imageView.setLayoutParams(new ViewGroup.LayoutParams(15, 15));
                     preImageViews[i] = imageView;
-                    preImageViews[i].setBackgroundResource(i==currentItem?indicator[0]:indicator[1]);
+                    preImageViews[i].setBackgroundResource(i == currentItem ? indicator[0] : indicator[1]);
 
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     layoutParams.leftMargin = configure.getIndicatorMargin();
                     llIndicator.addView(imageView, layoutParams);
                 }
-            }else {
+            } else {
 
                 //代码方式
                 for (int i = 0; i < imageInfo.getDatas().size(); i++) {
@@ -142,7 +146,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                     imageView.setLayoutParams(new ViewGroup.LayoutParams(boxSize, boxSize));
 
                     //默认第一个是选中
-                    imageView.setConfig(configure,currentItem==i);
+                    imageView.setConfig(configure, currentItem == i);
                     preImageViews[i] = imageView;
 
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(
@@ -150,19 +154,28 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                     layoutParams.leftMargin = configure.getIndicatorMargin();
                     llIndicator.addView(imageView, layoutParams);
                 }
-
             }
 
         } else {
-            tv_pager.setTextSize(configure.getPreTipTextSize());
-            tv_pager.setTextColor(configure.getPreTipColor());
-            tv_pager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
+            tvPager.setTextSize(configure.getPreTipTextSize());
+            tvPager.setTextColor(configure.getPreTipColor());
+            tvPager.setText(String.format(getString(R.string.select), currentItem + 1, imageInfo.getDatas().size()));
         }
+
     }
 
     @Override
     public void onBackPressed() {
         finishActivityAnim();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        viewPager = null;
+        imagePreviewAdapter = null;
+        configure = null;
     }
 
     /**
@@ -214,6 +227,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         final float vx = imageData.imageViewWidth * 1.0f / imageWidth;
         final float vy = imageData.imageViewHeight * 1.0f / imageHeight;
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -228,6 +242,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                 view.setAlpha(1 - fraction);
                 rootView.setBackgroundColor(evaluateArgb(fraction, Color.BLACK, Color.TRANSPARENT));
             }
+
         });
         addOutListener(valueAnimator);
         valueAnimator.setDuration(ANIMATE_DURATION);
@@ -252,6 +267,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         // 得出当宽高至少有一个充满的时候图片对应的宽高
         imageHeight = (int) (intrinsicHeight * h);
         imageWidth = (int) (intrinsicWidth * w);
+        drawable = null;
     }
 
     /**
@@ -290,7 +306,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                finish();
+                ImagePreviewActivity.this.finish();
                 overridePendingTransition(0, 0);
             }
 
@@ -339,4 +355,5 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                 | (startG + (int) (fraction * (endG - startG))) << 8//
                 | (startB + (int) (fraction * (endB - startB)));
     }
+
 }

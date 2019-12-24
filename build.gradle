@@ -3,29 +3,36 @@
 buildscript {
 
     repositories {
-        maven { url "https://jitpack.io" }
+
         google()
         jcenter()
+
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/zhengzaihong/maven" }
+
     }
     dependencies {
         classpath 'com.novoda:bintray-release:0.8.1'//添加
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        //gradlew clean build bintrayUpload -PbintrayUser=zhengzaihong -PbintrayKey=7aced6be172bfe8d162f06f5ba5ca1609321b54c -PdryRun=false
+        classpath 'com.android.tools.build:gradle:3.4.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
-allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-        google()
-        jcenter()
-
-    }
-}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+        mavenCentral()
+        maven { url "https://dl.bintray.com/zhengzaihong/maven" }
+        maven { url "https://jitpack.io" }
+    }
 }

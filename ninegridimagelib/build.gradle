@@ -22,10 +22,9 @@ android {
         }
     }
 
-    allprojects {
-        repositories {
-            maven { url "https://jitpack.io" }
-        }
+    //处理所有报META-INF/*'的错误
+    packagingOptions {
+        exclude('META-INF/MANIFEST.MF')
     }
 
 
@@ -36,10 +35,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
 }
 //添加
 publish {

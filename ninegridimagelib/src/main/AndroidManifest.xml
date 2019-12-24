@@ -10,9 +10,6 @@
         <activity
             android:name="com.dz.ninegridimages.preview.ImagePreviewActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name="com.dz.ninegridimages.preview.BigPicturePreviewActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

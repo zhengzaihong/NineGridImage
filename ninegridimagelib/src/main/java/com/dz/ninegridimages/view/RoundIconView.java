@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -17,7 +18,7 @@ import android.view.MotionEvent;
 * creat_time: 10:28
 * describe:支持圆角的view
 **/
-public class RoundIconView extends android.support.v7.widget.AppCompatImageView {
+public class RoundIconView extends AppCompatImageView {
 
     public RoundIconView(Context context) {
         this(context,null);

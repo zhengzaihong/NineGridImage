@@ -2,13 +2,9 @@ package com.dz.ninegridimages.config;
 
 
 import android.graphics.Color;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 
-import com.dz.ninegridimages.R;
 import com.dz.ninegridimages.interfaces.ImageLoader;
 import com.dz.ninegridimages.interfaces.PreImageOnLongClickListener;
-import com.dz.ninegridimages.view.NineGridView;
 
 /**
  * creat_user: zhengzaihong
@@ -18,7 +14,7 @@ import com.dz.ninegridimages.view.NineGridView;
  * describe: 宫格视图参数配置
  **/
 
-public class NineGridViewConfigure {
+public class NineGridViewConfigure{
 
     //填充模式，类似于微信
     public static final int MODE_FILL = 0;
@@ -83,7 +79,7 @@ public class NineGridViewConfigure {
 
     //指示器的大小
     private int indicatorSize = 30;
-    
+
     //是否开启圆点小指示器
     private boolean enableIndicatorDot = false;
 
@@ -292,9 +288,6 @@ public class NineGridViewConfigure {
         return this;
     }
 
-    
-    
-    
 
     public int getSelectIndicatorBgColor() {
         return selectIndicatorBgColor;
