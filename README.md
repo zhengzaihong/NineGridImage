@@ -22,15 +22,17 @@
 
 
 
+![demoApp](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/app-debug.apk)
    
 
 效果简版图：
+
+
 
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/pre.gif)
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/pre2.gif)
 ![Alt text](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/singlePic.gif)
 
-![demoApp](https://github.com/zhengzaihong/NineGridImage/blob/master/Screenshots/app-debug.apk)
 
 
 ****************************宫格图片使用说明：***************************
