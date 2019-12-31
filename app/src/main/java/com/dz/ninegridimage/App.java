@@ -3,10 +3,13 @@ package com.dz.ninegridimage;
 import android.app.Application;
 import android.graphics.Color;
 
+import com.dz.utlis.JavaUtils;
 import com.dz.utlis.ScreenUtils;
 import com.dz.utlis.ToastTool;
 import com.dz.utlis.UiCompat;
 import com.dz.utlis.view.ToastConfig;
+
+import static com.dz.utlis.JavaUtils.*;
 
 
 public class App extends Application {
@@ -15,6 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        isdebug = true;
         // Toast 配置
         ToastConfig config = new ToastConfig()
             .setInterval(2000)

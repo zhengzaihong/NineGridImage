@@ -53,4 +53,6 @@ dependencies {
     //作者其他开源库
     implementation "com.zzh:viewtools:0.1.92"
     implementation "com.zzh:rjtools:1.0.82"
+//    implementation "com.zzh:ninegridview:0.1.22"
+
 }

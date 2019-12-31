@@ -48,8 +48,6 @@ public class NineGridView<T> extends RelativeLayout {
 
     private NineGridViewConfigure configure;
 
-    private boolean isBind = false;
-
     public NineGridView(Context context) {
         this(context, null);
     }
@@ -64,7 +62,6 @@ public class NineGridView<T> extends RelativeLayout {
 
         initConfig(attrs);
     }
-
 
 
     /**
@@ -101,10 +98,6 @@ public class NineGridView<T> extends RelativeLayout {
 
     public NineGridView setNineAdapter(@NonNull NineGridViewAdapter adapter) {
         //如果是绑定过 直接刷新
-        if (isBind) {
-            invalidate();
-            return this;
-        }
         if (null == adapter) {
             return this;
         }
@@ -180,9 +173,8 @@ public class NineGridView<T> extends RelativeLayout {
         }
 
         this.mImageInfo = imageInfo;
-        this.isBind = true;
-//        requestLayout();
-        invalidate();
+        requestLayout();
+//        invalidate();
         return this;
 
     }
@@ -246,7 +238,7 @@ public class NineGridView<T> extends RelativeLayout {
 
         private NineGridViewConfigure mConfigure;
 
-        private List<T> imageInfo;
+        private List<T> imageInfo = new ArrayList<>();
 
 
         public NineGridViewBuilder(Context context) {
@@ -254,7 +246,6 @@ public class NineGridView<T> extends RelativeLayout {
         }
 
         public NineGridViewBuilder setNineGridViewConfigure(NineGridViewConfigure configure) {
-
             this.mConfigure = configure;
             return this;
         }
@@ -269,16 +260,13 @@ public class NineGridView<T> extends RelativeLayout {
             if (null == mContext || null == mConfigure) {
                 throw new IllegalAccessException("please check your parms,eg: Context or NineGridViewConfigure ");
             }
-            if (null == imageInfo) {
-                imageInfo = new ArrayList<>();
-            }
+
             MessageQueue queue = NineGridViewHelper.getInstance().getAdapterQueue();
-            if (queue.contains(imageInfo.hashCode())) {
-                Iterator iterator = queue.iterator();
-                while (iterator.hasNext()) {
-                    if (iterator.next().hashCode() == imageInfo.hashCode()) {
-                        return (NineGridViewAdapter) iterator.next();
-                    }
+            Iterator iterator = queue.iterator();
+            while (iterator.hasNext()) {
+                NineGridViewAdapter adapter = (NineGridViewAdapter) iterator.next();
+                if (adapter.getImage().hashCode() == imageInfo.hashCode()) {
+                    return adapter;
                 }
             }
             NineGridViewAdapter nineGridViewAdapter = new NineGridViewAdapter(mContext, mConfigure, imageInfo);

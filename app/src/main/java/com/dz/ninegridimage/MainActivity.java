@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         final List<GoodsImage> goodsImages = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            goodsImages.add(loadData());
+        for (int i = 0; i < urls.size(); i++) {
+            goodsImages.add(loadData(i));
         }
 
 
@@ -97,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
 
                         //真实开发中，如果你的列表显示 全是图片并多，且勿向这样加载，请异步处理，
                         // 列表在滑动时 不要加载图片，等待停止滑动后做加载。
-
+                        //且应要求后端 分多套分辨图返回
                         Glide.with(context).load(object.toString())
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
+                                .override(150, 150)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageView);
                     }
@@ -108,10 +109,11 @@ public class MainActivity extends AppCompatActivity {
                     //预览大图加载 可以在这里做加载动画等
                     @Override
                     public <T> void loadPreImage(Context context, ImageView imageView, T object) {
+
                         Glide.with(context).load(object.toString())
                                 .placeholder(R.mipmap.ic_launcher)
                                 .error(R.drawable.ic_default_color)
-                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imageView);
 
                     }
@@ -124,17 +126,16 @@ public class MainActivity extends AppCompatActivity {
             public void convert(ViewHolder holder, int position, GoodsImage entity) {
 
                 NineGridView nineGridView = holder.getView(R.id.nineGrid);
+                //配置并构建adapter
+                NineGridView.NineGridViewBuilder builder = new NineGridView.NineGridViewBuilder(mContext)
+                        .setImageInfo(entity.datas)
+                        .setNineGridViewConfigure(configure);
                 try {
-                    //配置并构建adapter
-                    NineGridView.NineGridViewBuilder builder = new NineGridView.NineGridViewBuilder(mContext)
-                            .setImageInfo(entity.datas)
-                            .setNineGridViewConfigure(configure);
-
                     nineGridView.setNineAdapter(builder.buildAdpter());
-
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
+
             }
         });
 
@@ -142,8 +143,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public GoodsImage loadData() {
+    public GoodsImage loadData(int position) {
         GoodsImage imageBean = new GoodsImage();
+//        List<String> data = new ArrayList<>();
+//        data.add(urls.get(position));
+//        imageBean.setDatas(data);
         imageBean.setDatas(randomUrl());
         return imageBean;
     }
@@ -151,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     public List<String> randomUrl() {
 
         List<String> stringList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             stringList.add(urls.get(new Random().nextInt(urls.size())));
         }
         return stringList;

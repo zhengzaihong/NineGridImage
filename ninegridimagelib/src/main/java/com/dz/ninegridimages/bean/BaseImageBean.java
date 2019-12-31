@@ -11,6 +11,7 @@ import java.util.List;
  * describe: 设置进来图片对象的必须是该类的子类
  **/
 
+@SuppressWarnings("all")
 public class BaseImageBean<T> implements Serializable {
 
     private String imageUrl;

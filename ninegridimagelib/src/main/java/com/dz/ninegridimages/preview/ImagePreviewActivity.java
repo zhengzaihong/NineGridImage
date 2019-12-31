@@ -58,7 +58,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
     private TextView tvPager;
     private LinearLayout llIndicator;
 
-
+    private ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
     @SuppressLint("StringFormatMatches")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,6 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
@@ -172,10 +171,8 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        viewPager = null;
-        imagePreviewAdapter = null;
-        configure = null;
+        valueAnimator.cancel();
+        System.gc();
     }
 
     /**
@@ -193,7 +190,7 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         final BaseImageBean imageData = imageInfo;
         final float vx = imageData.imageViewWidth * 1.0f / imageWidth;
         final float vy = imageData.imageViewHeight * 1.0f / imageHeight;
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -226,8 +223,6 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
         final BaseImageBean imageData = imageInfo;
         final float vx = imageData.imageViewWidth * 1.0f / imageWidth;
         final float vy = imageData.imageViewHeight * 1.0f / imageHeight;
-        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
-
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -355,5 +350,6 @@ public class ImagePreviewActivity extends Activity implements ViewTreeObserver.O
                 | (startG + (int) (fraction * (endG - startG))) << 8//
                 | (startB + (int) (fraction * (endB - startB)));
     }
+
 
 }

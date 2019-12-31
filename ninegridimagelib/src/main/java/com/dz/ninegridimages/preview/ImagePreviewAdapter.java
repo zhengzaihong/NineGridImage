@@ -2,6 +2,8 @@ package com.dz.ninegridimages.preview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -29,6 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * describe: 大图的适配器
  **/
 
+@SuppressWarnings("all")
 public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAttacher.OnPhotoTapListener {
 
     private List<T> imageInfo;
@@ -36,7 +39,7 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
     private View currentView;
     private NineGridViewConfigure configure;
 
-    public ImagePreviewAdapter(Context context, NineGridViewConfigure configure,@NonNull List<T> imageInfo) {
+    public ImagePreviewAdapter(Context context, NineGridViewConfigure configure, @NonNull List<T> imageInfo) {
         super();
         this.imageInfo = imageInfo;
         this.context = context;
@@ -66,14 +69,14 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
     }
 
     public ImageView getPrimaryImageView() {
-        return (ImageView) currentView.findViewById(R.id.pv);
+        return (ImageView) currentView;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_photoview, container, false);
+        final PhotoView imageView = (PhotoView) LayoutInflater.from(context).inflate(R.layout.item_photoview, container, false);
 
-        final PhotoView imageView = (PhotoView) view.findViewById(R.id.pv);
+        imageView.setAdjustViewBounds(true);
         imageView.setOnPhotoTapListener(this);
         final T info = imageInfo.get(position);
         showExcessPic(imageView);
@@ -89,14 +92,21 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
         });
 
         configure.getImageLoader().loadPreImage(context, imageView, info);
-        container.addView(view);
-        return view;
+        container.addView(imageView);
+        return imageView;
     }
 
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
+        if (object instanceof PhotoView) {
+            PhotoView view = (PhotoView) object;
+            view.setImageDrawable(null);
+            view.setBackground(null);
+            container.removeView((View) view);
+            releaseImageViewResouce((ImageView) view);
+
+        }
     }
 
     /**
@@ -112,6 +122,29 @@ public class ImagePreviewAdapter<T> extends PagerAdapter implements PhotoViewAtt
     @Override
     public void onPhotoTap(View view, float x, float y) {
         ((ImagePreviewActivity) context).finishActivityAnim();
+
+        releaseImageViewResouce((ImageView) view);
+
     }
+
+    /**
+     * 释放图片资源的方法
+     *
+     * @param imageView
+     */
+    public void releaseImageViewResouce(ImageView imageView) {
+        if (imageView == null) return;
+        Drawable drawable = imageView.getDrawable();
+        if (drawable != null && drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+                bitmap = null;
+            }
+        }
+        System.gc();
+    }
+
 
 }

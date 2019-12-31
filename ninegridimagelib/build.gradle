@@ -45,7 +45,7 @@ publish {
     userOrg = 'zhengzaihong'
     groupId = 'com.zzh'
     uploadName = "NineGridImage"
-    publishVersion = '0.1.22'
+    publishVersion = '0.1.23'
     desc = 'It can browse nine palace array pictures, and also support large picture preview. It also has very flexible customization effect.'
     website = 'https://github.com/zhengzaihong/NineGridImage.git'
 }
