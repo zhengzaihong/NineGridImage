@@ -5,7 +5,7 @@
 依赖地址：
 
    
-    implementation 'com.zzh:ninegridview:0.1.22'
+    implementation 'com.zzh:ninegridview:0.1.23'
     
     
     
