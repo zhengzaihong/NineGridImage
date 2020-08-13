@@ -5,26 +5,20 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.v7.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 import com.dz.ninegridimages.config.NineGridViewConfigure;
+import com.dz.ninegridimages.config.RadiusType;
 
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.ALL_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.LEFT_BOTTOM_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.LEFT_TOP_BOTTOM_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.LEFT_TOP_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.NONE_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.RIGHT_BOOTOM_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.RIGHT_TOP_BOOTOM_RADIUS;
-import static com.dz.ninegridimages.config.NineGridViewConfigure.RadiusType.RIGHT_TOP_RADIUS;
+import static com.dz.ninegridimages.config.RadiusType.*;
+
 
 /**
- * creat_user: zhengzaihong
+ * create_user: zhengzaihong
  * Email:1096877329@qq.com
- * creat_date: 2019/11/20
- * creat_time: 16:42
+ * create_date: 2019/11/20
+ * create_time: 16:42
  * describe 圆点指示器
  **/
 public class IndicatorView extends AppCompatImageView {

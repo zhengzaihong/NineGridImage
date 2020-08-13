@@ -4,13 +4,163 @@
 
 依赖地址：
 
-   
+   kotlin版：
+
+    implementation 'com.zzh:ninegridview:0.2.0'
+
+
+   Java版本 详情使用请往下翻(停止维护)：
+
     implementation 'com.zzh:ninegridview:0.1.23'
-    
-    
+
+
+
     
     
 更新日志：
+
+2020-8-12
+
+1.使用更加简洁，快速稳定性更强。
+
+2.修改和优化不雅的策略方式。
+
+3.支持普通单图和多图预览配置
+
+
+
+****************************宫格图片使用说明：***************************
+
+使用NineGridView加载视图:
+
+1、布局文件中：
+
+
+       <com.dz.ninegridimages.view.NineGridView
+           android:id="@+id/nineGrid"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+
+
+
+2、通过代码方式自定义样式配置：
+
+        val configure = NineGridViewConfigure()
+
+        with(configure) {
+            singleImageSize = 250//设置单张图片固定宽高
+            singleFixed = true//设置单张图片固定宽高
+            itemImageRadius = 10 //设置宫格视图图片圆角度数
+            columnNum = 2 //设置宫格视图列数
+            maxImageSize = 9  //设置最大显示多少张
+            gridSpacing = 10 //设置宫格视图的间距
+            mode = MODE_FILL//设置图片布局模式
+            singleImageRatio = 1.0f   //设置单张图片的缩放比例
+            enablePre = true //是否开启预览
+            moreTextColor = UiCompat.getColor(resources, R.color.amber_200)//设置超过最大张数显示的文本颜色
+            moreTextSize = 40f //设置超过最大张数显示的字体大小
+            preBgColor = UiCompat.getColor(resources, R.color.amber_200)//设置预览时的背景
+            preTipColor = UiCompat.getColor(resources, R.color.red) //设置指示器文本颜色
+            indicatorMargin = 10 //设置指示器间距
+            //设置指示器 为默认代码方式 如果是xml  方式配合如下 indicator使用
+            indicatorType = IndicatorType.XML
+            //设置自定义指示器 xml
+            indicator = intArrayOf(R.drawable.nine_view_indicator_select_dot, R.drawable.nine_view_indicator_un_select_dot)
+            indicatorBgPadding = 10 //设置Indicator小圆点 背景内距
+            indicatorRadiusType = RadiusType.ALL_RADIUS//边距全圆角
+            indicatorSize = 5 //设置 小圆点指示器大小
+            //以下属性在CODE 方式中生效
+            indicatorStrokeColor = UiCompat.getColor(resources, R.color.amber_200) // 设置Indicator小圆点 边框颜色
+            indicatorStrokeWidth = 0 //设置Indicator小圆点边框宽度
+            selectIndicatorBgColor = UiCompat.getColor(resources, R.color.light_blue_200) // 设置Indicator小圆点选中时的颜色
+            unSelectIndicatorBgColor = UiCompat.getColor(resources, R.color.gray_cc) //设置Indicator小圆点 未选中时的颜色
+
+            //添加预览大图的 加载回调
+            this.onPreBigImageListener = object : ImageLoader.OnPreBigImageListener {
+                override fun <E : Any?> loadPreImage(context: Context, imageView: ImageView, obj: E, index: Int) {
+                    Glide.with(context).load(obj.toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.ic_default_color)
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imageView)
+
+
+                    imageView.setOnLongClickListener {
+                        ToastTool.show("长按了哟 $index")
+                        false
+                    }
+
+                }
+            }
+
+            // 宫格视图 加载回调
+            this.onNineGridImageListener = object : ImageLoader.OnNineGridImageListener {
+
+                override fun <T : Any> displayImage(context: Context, imageView: ImageView, obj: T) {
+
+                    //真实开发中，如果你的列表显示 全是图片并多，且勿向这样加载，请异步处理，
+                    // 列表在滑动时 不要加载图片，等待停止滑动后做加载。
+                    //且应要求后端 分多套分辨图返回
+                    Glide.with(context).load(obj.toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.ic_default_color)
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imageView)
+
+                }
+            }
+
+        }
+
+
+3.绑定数据：
+
+     //支持泛型的数据
+     nineGridView.setData(entity.datas, configure)
+
+
+
+****************************单独使用大图浏览使用说明：***************************
+
+
+        val configure = NineGridViewConfigure()
+
+        with(configure) {
+
+            this.indicatorType = IndicatorType.TEXT
+            this.onPreBigImageListener = object : ImageLoader.OnPreBigImageListener {
+                override fun <E : Any?> loadPreImage(context: Context, imageView: ImageView, obj: E, index: Int) {
+                    Glide.with(context).load(obj.toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .error(R.drawable.ic_default_color)
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imageView)
+
+                    imageView.setOnLongClickListener {
+                        ToastTool.show("长按了哟 $index")
+                        false
+                    }
+
+                }
+            }
+        }
+
+        imageTest.setOnClickListener {
+            var bean = BaseImageBean<String>()
+            bean.datas = urls
+            //传入需要预览的 图片集合
+            this.startActivityPre(bean, cf =configure)
+        }
+
+
+
+
+
+
+以下为老版本Java 方式
 
 2019-12-22
 

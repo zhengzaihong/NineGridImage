@@ -1,17 +1,21 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'//添加
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
 
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     }
 
@@ -35,8 +39,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
 }
 //添加
@@ -45,7 +50,7 @@ publish {
     userOrg = 'zhengzaihong'
     groupId = 'com.zzh'
     uploadName = "NineGridImage"
-    publishVersion = '0.1.23'
+    publishVersion = '0.2.0'
     desc = 'It can browse nine palace array pictures, and also support large picture preview. It also has very flexible customization effect.'
     website = 'https://github.com/zhengzaihong/NineGridImage.git'
 }
