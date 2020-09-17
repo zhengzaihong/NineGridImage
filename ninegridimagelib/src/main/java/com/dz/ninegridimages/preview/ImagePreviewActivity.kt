@@ -7,7 +7,10 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewTreeObserver
 import android.widget.ImageView
@@ -17,7 +20,9 @@ import com.dz.ninegridimages.R
 import com.dz.ninegridimages.bean.BaseImageBean
 import com.dz.ninegridimages.config.IndicatorType
 import com.dz.ninegridimages.config.NineGridViewConfigure
-import com.dz.ninegridimages.view.IndicatorView
+import com.dz.ninegridimages.config.NineGridViewConfigure.*
+import com.dz.ninegridimages.config.NineGridViewConfigure.NineGridViewIndicatorStyleParams.*
+import com.dz.ninegridimages.view.ViewPagerIndicator
 import kotlinx.android.synthetic.main.activity_preview.*
 
 /**
@@ -45,6 +50,8 @@ class ImagePreviewActivity<T> : Activity(), ViewTreeObserver.OnPreDrawListener {
     private var screenWidth = 0
     private var screenHeight = 0
 
+    private var backgroundColor = Color.parseColor("#000000")
+
     private lateinit var imageInfo: BaseImageBean<T>
     private var preImageViews = ArrayList<ImageView>()
 
@@ -66,98 +73,124 @@ class ImagePreviewActivity<T> : Activity(), ViewTreeObserver.OnPreDrawListener {
 
         val bundle = intent.extras
 
-        configure = bundle.getSerializable(CONFIGURE) as NineGridViewConfigure
-        imageInfo = bundle.getSerializable(IMAGE_INFO) as BaseImageBean<T>
-        currentItem = bundle.getInt(CURRENT_ITEM, 0)
+        bundle?.apply {
+            configure = getSerializable(CONFIGURE) as NineGridViewConfigure
+            imageInfo = getSerializable(IMAGE_INFO) as BaseImageBean<T>
+            currentItem = getInt(CURRENT_ITEM, 0)
+        }
 
-        imagePreviewAdapter = ImagePreviewAdapter(this, configure, imageInfo?.datas)
+        var preConfigure = configure.buildPreImageStyleParams()
+        backgroundColor = preConfigure.preBgColor
 
-        val indicator = configure.indicator
-        viewPager.adapter = imagePreviewAdapter
+        imagePreviewAdapter = ImagePreviewAdapter(this, preConfigure, imageInfo?.datas)
+
+
+        viewPager.apply {
+            adapter = imagePreviewAdapter
+            viewTreeObserver.addOnPreDrawListener(this@ImagePreviewActivity)
+        }
+        initPage()
         viewPager.currentItem = currentItem
-        viewPager.viewTreeObserver.addOnPreDrawListener(this)
-        initPage(indicator)
+
+    }
+
+
+    private fun initPage() {
+
+        var indicatorConfigure = configure.buildIndicatorStyleParams()
 
         viewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageSelected(position: Int) {
                 currentItem = position
+                when (indicatorConfigure.styleType()) {
 
-                when (configure.indicatorType) {
+                    IndicatorType.TEXT -> {
+                        tvPager.text = String.format(getString(R.string.select), imageInfo.datas.size, currentItem + 1)
+                    }
+
                     IndicatorType.XML -> {
-                        indicator?.let {
+                        var nineGridViewIndicatorXml = indicatorConfigure.buildStyleXml()
+                        nineGridViewIndicatorXml.let {
                             for (i in preImageViews.indices) {
-                                preImageViews[i]!!.setBackgroundResource(if (i == position) it[0] else it[1])
+                                preImageViews[i].setBackgroundResource(if (i == position) it.indicator?.get(0) else it.indicator[1])
                             }
                         }
                     }
-                    IndicatorType.CODE -> {
-                        for (i in preImageViews.indices) {
-                            (preImageViews[i] as IndicatorView).changView(i == position)
-                        }
+                    //TODO 后期完成
+                    IndicatorType.CUSTOM -> {
                     }
-
-                    //显示文本指示器
-                    IndicatorType.TEXT -> {
-                        tvPager.text = String.format(getString(R.string.select), imageInfo.datas.size, currentItem + 1)
+                    //改变到由指示器内部完成了
+                    IndicatorType.CODE -> {
                     }
 
                 }
             }
         })
-    }
 
 
-    private fun initPage(indicator: IntArray?) {
+        when (indicatorConfigure.styleType()) {
 
-
-        when (configure.indicatorType) {
             IndicatorType.XML -> {
                 llIndicator.visibility = View.VISIBLE
                 tvPager.visibility = View.GONE
-                indicator?.let {
+
+                var nineGridViewIndicatorXml = indicatorConfigure.buildStyleXml()
+                nineGridViewIndicatorXml.indicator?.let {
                     for (i in imageInfo!!.datas!!.indices) {
                         val imageView = ImageView(mContext)
-                        imageView.layoutParams = LayoutParams(15, 15)
+                        var size = nineGridViewIndicatorXml.indicatorSize
+                        imageView.layoutParams = LayoutParams(size, size)
                         preImageViews.add(imageView)
-                        preImageViews[i].setBackgroundResource(if (i == currentItem) indicator[0] else indicator[1])
-
+                        preImageViews[i].setBackgroundResource(if (i == currentItem) it[0] else it[1])
                         val layoutParams = LinearLayout.LayoutParams(LayoutParams(
                                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
 
-                        layoutParams.leftMargin = configure.indicatorMargin
+                        layoutParams.leftMargin = nineGridViewIndicatorXml.indicatorMargin
 
                         llIndicator.addView(imageView, layoutParams)
                     }
                 }
+
             }
 
             IndicatorType.CODE -> {
                 llIndicator.visibility = View.VISIBLE
                 tvPager.visibility = View.GONE
-                //代码方式
-                for (i in imageInfo!!.datas!!.indices) {
-                    val imageView = IndicatorView(mContext)
-                    val boxSize = configure.indicatorSize
-                    imageView.layoutParams = LayoutParams(boxSize, boxSize)
 
-                    //默认第一个是选中
-                    imageView.setConfig(configure, currentItem == i)
-                    preImageViews.add(imageView)
-                    val layoutParams = LinearLayout.LayoutParams(LayoutParams(
-                            LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
-                    layoutParams.leftMargin = configure!!.indicatorMargin
-                    llIndicator.addView(imageView, layoutParams)
+                var nineGridViewIndicatorCode = indicatorConfigure.buildStyleCode()
+                var pagerIndicator = ViewPagerIndicator(this)
+                val pagerIndicatorParams = LayoutParams(LayoutParams(
+                        LayoutParams.MATCH_PARENT,  LayoutParams.MATCH_PARENT))
+                pagerIndicator.layoutParams = pagerIndicatorParams
+
+                pagerIndicator.apply {
+                    nineGridViewIndicatorCode?.let {
+                        setDistance((it.indicatorMargin).toFloat())
+                        setRadius(it.indicatorSize.toFloat())
+                        setDistanceType(it.distanceType)
+                        setRadiusSelected(it.indicatorCorner.toFloat())
+                        setDefaultColor(it.unSelectIndicatorBgColor)
+                        setSelectColor(it.selectIndicatorBgColor)
+                        setType(it.vpIndicatorType)
+                        setViewPager(viewPager)
+                        setNum(imageInfo.datas.size)
+                    }
                 }
+
+                val layoutParams = LayoutParams(LayoutParams(
+                        LayoutParams.WRAP_CONTENT, nineGridViewIndicatorCode?.indicatorViewHeight))
+                llIndicator.addView(pagerIndicator, layoutParams)
             }
 
             //显示文本指示器
             IndicatorType.TEXT -> {
                 llIndicator.visibility = View.GONE
                 tvPager.visibility = View.VISIBLE
-                tvPager.textSize = configure.preTipTextSize.toFloat()
-                tvPager.setTextColor(configure.preTipColor)
+                var nineGridViewIndicatorText = indicatorConfigure.buildStyleText()
+                tvPager.textSize = nineGridViewIndicatorText.preTipTextSize.toFloat()
+                tvPager.setTextColor(nineGridViewIndicatorText.preTipColor)
                 tvPager.text = String.format(getString(R.string.select), imageInfo.datas.size, currentItem + 1)
             }
         }
@@ -183,7 +216,7 @@ class ImagePreviewActivity<T> : Activity(), ViewTreeObserver.OnPreDrawListener {
         computeImageWidthAndHeight(imageView)
 
         val imageData = imageInfo
-        val vx = imageData!!.imageViewWidth * 1.0f / imageWidth
+        val vx = imageData.imageViewWidth * 1.0f / imageWidth
         val vy = imageData.imageViewHeight * 1.0f / imageHeight
         valueAnimator.addUpdateListener { animation ->
             val duration = animation.duration
@@ -199,7 +232,7 @@ class ImagePreviewActivity<T> : Activity(), ViewTreeObserver.OnPreDrawListener {
                 it.alpha = fraction
             }
 
-            rootView.setBackgroundColor(evaluateArgb(fraction, Color.TRANSPARENT, configure.preBgColor))
+            rootView.setBackgroundColor(evaluateArgb(fraction, Color.TRANSPARENT, backgroundColor))
         }
         addIntoListener(valueAnimator)
         valueAnimator.duration = ANIMATE_DURATION.toLong()

@@ -36,7 +36,7 @@ public class RoundIconView extends AppCompatImageView {
 
 
     private final RectF roundRect = new RectF();
-    private float rect_radius = 0;
+    private float corner = 0;
     private final Paint maskPaint = new Paint();
     private final Paint zonePaint = new Paint();
  
@@ -46,11 +46,11 @@ public class RoundIconView extends AppCompatImageView {
         zonePaint.setAntiAlias(true);
         zonePaint.setColor(Color.WHITE);
         float density = getResources().getDisplayMetrics().density;
-        rect_radius = rect_radius * density;
+        corner = corner * density;
     }
  
-    public void setRectRadius(float adius) {
-        rect_radius = adius;
+    public void setCorner(float adius) {
+        corner = adius;
         invalidate();
     }
  
@@ -66,7 +66,7 @@ public class RoundIconView extends AppCompatImageView {
     @Override
     public void draw(Canvas canvas) {
         canvas.saveLayer(roundRect, zonePaint, Canvas.ALL_SAVE_FLAG);
-        canvas.drawRoundRect(roundRect, rect_radius, rect_radius, zonePaint);
+        canvas.drawRoundRect(roundRect, corner, corner, zonePaint);
         //
         canvas.saveLayer(roundRect, maskPaint, Canvas.ALL_SAVE_FLAG);
         super.draw(canvas);

@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="NineGridView">
-        <attr name="nineSingleImageSize" format="dimension"/>
-        <attr name="nineSingleImageRatio" format="float"/>
-        <attr name="nineGridSpacing" format="dimension"/>
-        <attr name="nineMaxSize" format="integer"/>
-        <attr name="nineMode" format="enum">
-            <enum name="fill" value="0"/>
-            <enum name="grid" value="1"/>
+
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="vpi_selected_color" format="color|reference"/>
+        <attr name="vpi_default_color" format="color|reference"/>
+        <attr name="vpi_radius" format="dimension|reference"/>
+        <attr name="vpi_radius_selected" format="dimension|reference"/>
+        <attr name="vpi_length" format="dimension|reference"/>
+        <attr name="vpi_distance" format="dimension|reference"/>
+        <attr name="vpi_num" format="integer"/>
+        <attr name="vpi_indicatorType">
+            <enum name="LINE" value="0" />
+            <enum name="CIRCLE" value="1" />
+            <enum name="CIRCLE_LINE" value="2" />
+            <enum name="BEZIER" value="3" />
+            <enum name="SPRING" value="4" />
+            <enum name="PROGRESS" value="5" />
         </attr>
-
-        <attr name="nineImageRectAdius" format="dimension"/>
-        <attr name="nineColumnNum" format="integer"/>
-        <attr name="nineSingleFixed" format="boolean"/>
-        <attr name="nineMoreTextColor" format="color|reference"/>
-        <attr name="nineMoreTextSize" format="dimension"/>
-
-        <attr name="preIndicatorMargin" format="dimension"/>
-        <attr name="preTipTextColor" format="color|reference"/>
-        <attr name="preTipTextSize" format="dimension"/>
-        <attr name="preBgColor" format="color|reference"/>
-
+        <attr name="vpi_distanceType">
+            <enum name="BY_RADIUS" value="0" />
+            <enum name="BY_DISTANCE" value="1" />
+            <enum name="BY_LAYOUT" value="2" />
+        </attr>
+        <attr name="vpi_animation" format="boolean"/>
     </declare-styleable>
+
 </resources>

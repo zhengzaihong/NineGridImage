@@ -6,10 +6,10 @@ import android.widget.ImageView;
 import java.io.Serializable;
 
 /**
- * creat_user: zhengzaihong
+ * create_user: zhengzaihong
  * email:1096877329@qq.com
- * creat_date: 2019/1/22 0022
- * creat_time: 17:04
+ * create_date: 2019/1/22 0022
+ * create_time: 17:04
  * describe: 图片加载接口
  **/
 
@@ -37,7 +37,7 @@ public interface ImageLoader extends Serializable {
     /**
      * 加载预览大图的监听器
      */
-    interface OnPreBigImageListener extends ImageLoader{
+    interface OnPreImageListener extends ImageLoader{
 
         /**
          * 需要子类实现该方法，以确定如何加载和显示图片
@@ -45,6 +45,7 @@ public interface ImageLoader extends Serializable {
          * @param context   上下文
          * @param imageView 需要展示图片的ImageView
          * @param obj    实体类
+         * @param index  预览图下标
          */
         <E> void loadPreImage(Context context, ImageView imageView, E obj,int index);
 

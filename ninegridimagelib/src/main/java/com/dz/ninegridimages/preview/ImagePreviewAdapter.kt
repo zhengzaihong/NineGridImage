@@ -2,14 +2,13 @@ package com.dz.ninegridimages.preview
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.dz.ninegridimages.R
-import com.dz.ninegridimages.config.NineGridViewConfigure
+import com.dz.ninegridimages.config.NineGridViewConfigure.NineGridViewPreImageStyleParams
 import uk.co.senab.photoview.PhotoView
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener
 
@@ -20,7 +19,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener
  * create_time: 16:11
  * describe: 大图的适配器
  */
-open class ImagePreviewAdapter<T>(val context: Context, val configure: NineGridViewConfigure, val imageInfo: List<T>) : PagerAdapter(), OnPhotoTapListener {
+open class ImagePreviewAdapter<T>(val context: Context, val configure: NineGridViewPreImageStyleParams, val imageInfo: List<T>) : PagerAdapter(), OnPhotoTapListener {
 
 
     var primaryItem: View? = null
@@ -50,7 +49,7 @@ open class ImagePreviewAdapter<T>(val context: Context, val configure: NineGridV
         imageView.onPhotoTapListener = this
         val info = imageInfo!![position]
         showExcessPic(imageView)
-        configure.onPreBigImageListener?.loadPreImage(context, imageView, info,position)
+        configure.onPreImageListener?.loadPreImage(context, imageView, info,position)
         container.addView(imageView)
         return imageView
     }

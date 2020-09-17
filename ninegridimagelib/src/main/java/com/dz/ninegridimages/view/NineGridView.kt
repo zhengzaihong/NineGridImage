@@ -9,13 +9,14 @@ import android.widget.RelativeLayout
 import com.dz.ninegridimages.R
 import com.dz.ninegridimages.bean.BaseImageBean
 import com.dz.ninegridimages.config.NineGridViewConfigure
+import com.dz.ninegridimages.config.NineGridViewConfigure.*
 import com.dz.ninegridimages.config.NineGridViewConfigure.Companion.MODE_GRID
 import com.dz.ninegridimages.util.getStatusHeight
 import com.dz.ninegridimages.util.startActivityPre
 
 
 /**
- * creat_user: zhengzaihong
+ * create_user: zhengzaihong
  * email:1096877329@qq.com
  * create_date: 2019/1/17 0017
  * create_time: 16:11
@@ -47,21 +48,33 @@ class NineGridView<T> constructor(
     private val statusHeight = getStatusHeight(context)
     private var configure = NineGridViewConfigure()
 
+    private var baseStyleParams = configure.buildBaseStyleParams()
+    private var preImageStyleParams = configure.buildPreImageStyleParams()
+
+
+    /**
+     * 获取配置文件信息
+     */
+    open fun getConfigure():NineGridViewConfigure{
+        return configure
+    }
+
 
     /**
      * 获得 ImageView 保证了 ImageView 的重用
      */
     private fun getImageView(position: Int): RoundIconView {
+
         val imageView: RoundIconView
         if (position < imageViews.size) {
             imageView = imageViews[position]
         } else {
             imageView = generateImageView(context)
-            if (configure.itemImageRadius > 0) imageView.setRectRadius(configure.itemImageRadius.toFloat())
+            imageView.setCorner(baseStyleParams.itemImageCorner.toFloat())
 
             imageView.setOnClickListener {
 
-                if (!configure.enablePre || mImageInfo.isNullOrEmpty()) {
+                if (!preImageStyleParams.enablePre || mImageInfo.isNullOrEmpty()) {
                     return@setOnClickListener
                 }
 
@@ -70,13 +83,12 @@ class NineGridView<T> constructor(
                 mImageInfo?.let {
                     for (i in it.indices) {
                         try {
-                            var imageView = if (i < configure.maxImageSize) {
+                            var imageView = if (i < baseStyleParams.maxImageSize) {
                                 getChildAt(i)
                             } else {
                                 //如果图片的数量大于显示的数量，则超过部分的返回动画统一退回到最后一个图片的位置
-                                getChildAt(configure.maxImageSize - 1)
+                                getChildAt(baseStyleParams.maxImageSize - 1)
                             }
-
                             with(imageBean) {
                                 imageViewWidth = imageView.width
                                 imageViewHeight = imageView.height
@@ -94,8 +106,6 @@ class NineGridView<T> constructor(
 
                 Log.v("------->", imageBean.toString())
                 context.startActivityPre(imageBean, position, configure)
-
-
             }
             imageViews.add(imageView)
         }
@@ -125,20 +135,24 @@ class NineGridView<T> constructor(
 
         //更新外部转入的 configure
         this.configure = cf
+        this.baseStyleParams = configure.buildBaseStyleParams()
+        this.preImageStyleParams = configure.buildPreImageStyleParams()
+
+
         visibility = View.VISIBLE
         var imageCount = imageInfo.size
 
-        if (configure.maxImageSize in 1 until imageCount) {
+        if (baseStyleParams.maxImageSize in 1 until imageCount) {
             //再次获取图片数量
-            imageCount = imageInfo.subList(0, configure.maxImageSize).size
+            imageCount = imageInfo.subList(0, baseStyleParams.maxImageSize).size
         }
 
-        rowCount = imageCount / configure.columnNum + if (imageCount % configure.columnNum == 0) 0 else 1
-        columnCount = configure.columnNum
+        rowCount = imageCount / baseStyleParams.columnNum + if (imageCount % baseStyleParams.columnNum == 0) 0 else 1
+        columnCount = baseStyleParams.columnNum
 
 
         //grid模式下，显示4张使用2X2模式
-        if (configure.mode == MODE_GRID) {
+        if (baseStyleParams.mode == MODE_GRID) {
             if (imageCount == 4) {
                 rowCount = 2
                 columnCount = 2
@@ -174,16 +188,15 @@ class NineGridView<T> constructor(
             }
         }
         //修改最后一个条目，决定是否显示更多
-        if (imageInfo.size > configure.maxImageSize) {
-            val child = getChildAt(configure.maxImageSize - 1)
+        if (imageInfo.size > baseStyleParams.maxImageSize) {
+            val child = getChildAt(baseStyleParams.maxImageSize - 1)
             if (child is NineGridViewWrapper) {
 
                 with(child) {
-                    moreNum = imageInfo.size - configure.maxImageSize
-                    textColor = configure.moreTextColor
-                    textSize = configure.moreTextSize
+                    moreNum = imageInfo.size - baseStyleParams.maxImageSize
+                    textColor = baseStyleParams.moreTextColor
+                    textSize = baseStyleParams.moreTextSize
                 }
-
             }
         }
         mImageInfo = imageInfo
@@ -198,24 +211,24 @@ class NineGridView<T> constructor(
         val totalWidth = width - paddingLeft - paddingRight
         if (!mImageInfo.isNullOrEmpty()) {
             if (mImageInfo!!.size == 1) {
-                gridWidth = if (configure.singleImageSize > totalWidth) totalWidth else configure.singleImageSize
-                gridHeight = (gridWidth / configure.singleImageRatio).toInt()
+                gridWidth = if (baseStyleParams.singleImageSize > totalWidth) totalWidth else baseStyleParams.singleImageSize
+                gridHeight = (gridWidth / baseStyleParams.singleImageRatio).toInt()
                 //矫正图片显示区域大小，不允许超过最大显示范围
-                if (gridHeight > configure.singleImageSize) {
-                    if (!configure.singleFixed) {
-                        val ratio = configure.singleImageSize * 1.0f / gridHeight
+                if (gridHeight > baseStyleParams.singleImageSize) {
+                    if (!baseStyleParams.singleFixed) {
+                        val ratio = baseStyleParams.singleImageSize * 1.0f / gridHeight
                         gridWidth = (gridWidth * ratio).toInt()
                     }
-                    gridHeight = configure.singleImageSize
+                    gridHeight = baseStyleParams.singleImageSize
                 }
             } else {
 //                gridWidth = gridHeight = (totalWidth - gridSpacing * (columnCount - 1)) / columnCount;
                 //这里无论是几张图片，宽高都按总宽度的 1/columnCount
-                gridHeight = (totalWidth - configure.gridSpacing * 2) / columnCount
+                gridHeight = (totalWidth - baseStyleParams.gridSpacing * 2) / columnCount
                 gridWidth = gridHeight
             }
-            width = gridWidth * columnCount + configure.gridSpacing * (columnCount - 1) + paddingLeft + paddingRight
-            height = gridHeight * rowCount + configure.gridSpacing * (rowCount - 1) + paddingTop + paddingBottom
+            width = gridWidth * columnCount + baseStyleParams.gridSpacing * (columnCount - 1) + paddingLeft + paddingRight
+            height = gridHeight * rowCount + baseStyleParams.gridSpacing * (rowCount - 1) + paddingTop + paddingBottom
         }
         setMeasuredDimension(width, height)
     }
@@ -227,12 +240,12 @@ class NineGridView<T> constructor(
             val childrenView = getChildAt(i) as ImageView
             val rowNum = i / columnCount
             val columnNum = i % columnCount
-            val left = (gridWidth + configure.gridSpacing) * columnNum + paddingLeft
-            val top = (gridHeight + configure.gridSpacing) * rowNum + paddingTop
+            val left = (gridWidth + baseStyleParams.gridSpacing) * columnNum + paddingLeft
+            val top = (gridHeight + baseStyleParams.gridSpacing) * rowNum + paddingTop
             val right = left + gridWidth
             val bottom = top + gridHeight
             childrenView.layout(left, top, right, bottom)
-            configure?.onNineGridImageListener?.displayImage(context, childrenView, mImageInfo!![i])
+            baseStyleParams?.onNineGridImageListener?.displayImage(context, childrenView, mImageInfo!![i])
         }
     }
 

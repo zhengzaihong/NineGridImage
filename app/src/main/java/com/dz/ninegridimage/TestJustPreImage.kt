@@ -42,31 +42,31 @@ class TestJustPreImage : Activity() {
         val configure = NineGridViewConfigure()
 
         with(configure) {
+            this.buildPreImageStyleParams().apply {
+                this.onPreImageListener = object : ImageLoader.OnPreImageListener {
+                    override fun <E : Any?> loadPreImage(context: Context, imageView: ImageView, obj: E, index: Int) {
+                        Glide.with(context).load(obj.toString())
+                                .placeholder(R.mipmap.ic_launcher)
+                                .error(R.drawable.ic_default_color)
+                                .override(150, 150)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imageView)
 
-            this.indicatorType = IndicatorType.TEXT
-            this.onPreBigImageListener = object : ImageLoader.OnPreBigImageListener {
-                override fun <E : Any?> loadPreImage(context: Context, imageView: ImageView, obj: E, index: Int) {
-                    Glide.with(context).load(obj.toString())
-                            .placeholder(R.mipmap.ic_launcher)
-                            .error(R.drawable.ic_default_color)
-                            .override(150, 150)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imageView)
-
-                    imageView.setOnLongClickListener {
-                        ToastTool.show("长按了哟 $index")
-                        false
+                        imageView.setOnLongClickListener {
+                            ToastTool.show("长按了哟 $index")
+                            false
+                        }
                     }
-
                 }
             }
+
         }
 
         imageTest.setOnClickListener {
             var bean = BaseImageBean<String>()
             bean.datas = urls
             //传入需要预览的 图片集合
-            this.startActivityPre(bean, cf =configure)
+            this.startActivityPre(bean, cf = configure)
         }
 
 
