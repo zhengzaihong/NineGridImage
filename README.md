@@ -6,7 +6,7 @@
 
 
 
-![Alt text](https://github.com/zhengzaihong/NineGridImage/master/Screenshots/pre.gif)
+![Alt text](https://github.com/zhengzaihong/NineGridImage/tree/master/Screenshots/pre.gif)
 
 
 依赖地址：
