@@ -107,7 +107,7 @@
 
         with(configure.buildIndicatorStyleParams()){
 
-            //以下配置三选一 肯定参数请结合源码
+            //以下配置三选一 其他参数请结合源码
             //代码指示器
             this.buildStyleCode().apply {
 
