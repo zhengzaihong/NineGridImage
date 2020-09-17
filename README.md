@@ -17,12 +17,6 @@
     implementation 'com.zzh:ninegridview:0.3.0'
 
 
-   Java版本 详情使用请往下翻(停止维护)：
-
-    implementation 'com.zzh:ninegridview:0.1.23'
-
-
-
 
 
 更新日志：
