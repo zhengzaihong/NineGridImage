@@ -1,1 +1,1 @@
-include ':app', ':ninegridimagelib'
+include ':app', ':NineGridImageLib'
