@@ -5,7 +5,7 @@
 
 效果简版图：
 
-![](https://github.com/zhengzaihong/NineGridImage/blob/master/images/pre-min.gif)
+<img src="https://github.com/zhengzaihong/NineGridImage/blob/master/images/pre-min.gif" width="400" height="600" alt="note"/>
 
 
 依赖地址：
