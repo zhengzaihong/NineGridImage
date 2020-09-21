@@ -43,9 +43,9 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-//    implementation 'com.zzh:ninegridview:0.3.0'
+    implementation 'com.zzh:ninegridview:0.3.0'
 
-    implementation project(':NineGridImageLib')
+//    implementation project(':NineGridImageLib')
     //作者其他开源库
     implementation "com.zzh:viewtools:0.1.92"
     implementation "com.zzh:rjtools:1.0.83"

@@ -19,7 +19,7 @@ public interface ImageLoader extends Serializable {
     /**
      * 显示宫格视图的 监听器
      */
-    interface OnNineGridImageListener extends ImageLoader{
+     interface OnNineGridImageListener extends ImageLoader{
 
         /**
          * 需要子类实现该方法，以确定如何加载和显示图片
