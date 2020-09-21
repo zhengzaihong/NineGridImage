@@ -7,7 +7,7 @@
 
 
 
-![Alt text](https://github.com/zhengzaihong/NineGridImage/tree/master/Screenshots/pre.gif)
+<img src="https://github.com/zhengzaihong/NineGridImage/tree/master/Screenshots/pre.gif" width="400" height="600" alt="note"/>
 
 
 依赖地址：
