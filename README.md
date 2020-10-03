@@ -1,7 +1,4 @@
 
-# NineGridImage
-
-
 
 效果简版图：
 
@@ -10,7 +7,6 @@
 
 依赖地址：
 
-   kotlin版：
 
     implementation 'com.zzh:ninegridview:0.3.0'
 
