@@ -5,10 +5,10 @@
 <img src="https://github.com/zhengzaihong/NineGridImage/blob/master/images/pre-min.gif" width="300" height="500" alt="note"/>
 
 
-依赖地址：
+依赖地址(已迁移jetpack)：
 
 
-    implementation 'com.zzh:ninegridview:0.3.0'
+   implementation 'com.github.zhengzaihong:MyViews:1.0.0'
 
 
 
