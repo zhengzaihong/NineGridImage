@@ -59,7 +59,6 @@ class TestJustPreImage : Activity() {
                     }
                 }
             }
-
         }
 
         imageTest.setOnClickListener {

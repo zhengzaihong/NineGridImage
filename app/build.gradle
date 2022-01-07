@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.dz.ninegridimage"
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,10 +44,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.github.zhengzaihong:NineGridImage:1.0.0'
     implementation 'com.github.zhengzaihong:MyViews:1.0.0'
 
-//    implementation project(':NineGridImageLib')
+    implementation project(':NineGridImageLib')
 
 
     implementation "com.zzh:rjtools:1.0.83"
