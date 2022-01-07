@@ -1,5 +1,5 @@
 
-version:[![](https://jitpack.io/v/zhengzaihong/NineGridImage.svg)](https://jitpack.io/#zhengzaihong/NineGridImage)
+版本信息:[![](https://jitpack.io/v/zhengzaihong/NineGridImage.svg)](https://jitpack.io/#zhengzaihong/NineGridImage)
 
 效果简版图：
 
